@@ -1,0 +1,6 @@
+[submodule "as3.behaviors"]
+	path = as3.behaviors
+	url = https://github.com/valyard/as3.behaviors.git
+[submodule "tuio.3asobj"]
+	path = tuio.3asobj
+	url = https://github.com/valyard/tuio.3asobj
