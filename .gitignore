@@ -1,0 +1,10 @@
+bin
+bin-debug
+bin-release
+.settings
+.DS_Store
+.FlexUnitSettings
+FlexUnitCompilerApplication.as
+FlexUnitApplication.as
+html-template
+.flexLibProperties
