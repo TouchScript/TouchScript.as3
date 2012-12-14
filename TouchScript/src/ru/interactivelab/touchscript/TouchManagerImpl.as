@@ -244,7 +244,7 @@ package ru.interactivelab.touchscript {
 						}
 						if (canReceiveTouches) {
 							var touchesToReceive:Array = [];
-							for each (var touchToReceive:TouchPoint in targetTouches[target]) {
+							for each (touch in targetTouches[target]) {
 								if (gesture.shouldReceiveTouch(touch)) touchesToReceive.push(touch);
 							}
 							if (touchesToReceive.length > 0) {
@@ -284,9 +284,9 @@ package ru.interactivelab.touchscript {
 					var id:int = i as int;
 					var position:Point = _touchesMoved[id];
 					var touch:TouchPoint = _idToTouch[id];
+					delete _touchesMoved[id];
 					if (!touch) continue;
 					if (touch.position.equals(position)) continue;
-					
 					touch.position = position;
 					reallyMoved.push(touch);
 					if (touch.target != null) {
@@ -297,7 +297,6 @@ package ru.interactivelab.touchscript {
 						}
 						list.push(touch);
 					}
-					delete _touchesMoved[id];
 				}
 				
 				var gestureTouches:Dictionary = new Dictionary();
@@ -309,7 +308,7 @@ package ru.interactivelab.touchscript {
 						if (!gestureIsActive(gesture)) continue;
 						
 						var touchesToReceive:Array = [];
-						for each (var touchToReceive:TouchPoint in targetTouches[target]) {
+						for each (touch in targetTouches[target]) {
 							if (gesture.hasTouchPoint(touch)) touchesToReceive.push(touch);
 						}
 						if (touchesToReceive.length > 0) {
@@ -360,7 +359,7 @@ package ru.interactivelab.touchscript {
 						if (!gestureIsActive(gesture)) continue;
 						
 						var touchesToReceive:Array = [];
-						for each (var touchToReceive:TouchPoint in targetTouches[target]) {
+						for each (touch in targetTouches[target]) {
 							if (gesture.hasTouchPoint(touch)) touchesToReceive.push(touch);
 						}
 						if (touchesToReceive.length > 0) {
@@ -412,7 +411,7 @@ package ru.interactivelab.touchscript {
 						if (!gestureIsActive(gesture)) continue;
 						
 						var touchesToReceive:Array = [];
-						for each (var touchToReceive:TouchPoint in targetTouches[target]) {
+						for each (touch in targetTouches[target]) {
 							if (gesture.hasTouchPoint(touch)) touchesToReceive.push(touch);
 						}
 						if (touchesToReceive.length > 0) {
