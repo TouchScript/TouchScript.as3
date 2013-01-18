@@ -1,5 +1,4 @@
-package ru.interactivelab.touchscript.inputSources
-{
+package ru.interactivelab.touchscript.inputSources {
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;

@@ -123,7 +123,19 @@ package ru.interactivelab.touchscript {
 		}
 		
 		public function cancelTouch(id:int):void {
-			// TODO
+			var touch:TouchPoint;
+			if (_idToTouch[id]) {
+				touch = _idToTouch[id];
+			} else {
+				for each (var added:TouchPoint in _touchesBegan) {
+					if (added.id == id) {
+						touch = added;
+						break;
+					}
+				}
+				if (touch == null) return;
+			}
+			_touchesCancelled.push(touch);
 		}
 		
 		public function moveTouch(id:int, position:Point):void {
@@ -194,9 +206,7 @@ package ru.interactivelab.touchscript {
 			return state;
 		}
 		
-		touch_internal function ignoreTouch(touch:TouchPoint):void {
-			// TODO
-		}
+		touch_internal function ignoreTouch(touch:TouchPoint):void {}
 		
 		//--------------------------------------------------------------------------
 		//
