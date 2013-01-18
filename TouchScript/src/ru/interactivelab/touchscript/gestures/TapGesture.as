@@ -17,6 +17,22 @@ package ru.interactivelab.touchscript.gestures
 		private var _totalMovement:Number = 0;
 		private var _startTime:Number;
 		
+		public function get timeLimit():Number {
+			return _timeLimit;
+		}
+		
+		public function set timeLimit(value:Number):void {
+			_timeLimit = value;
+		}
+		
+		public function get distanceLimit():Number {
+			return _distanceLimit;
+		}
+		
+		public function set distanceLimit(value:Number):void {
+			_distanceLimit = value;
+		}
+		
 		public function TapGesture(target:InteractiveObject, ...params) {
 			super(target, params);
 		}

@@ -1,5 +1,4 @@
-package ru.interactivelab.touchscript.gestures
-{
+package ru.interactivelab.touchscript.gestures {
 	import flash.display.InteractiveObject;
 	import flash.geom.Point;
 	
