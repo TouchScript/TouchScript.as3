@@ -1,5 +1,4 @@
-package ru.interactivelab.touchscript.clusters
-{
+package ru.interactivelab.touchscript.clusters {
 	import flash.geom.Point;
 
 	public class Cluster1 extends Cluster {

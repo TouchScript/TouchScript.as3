@@ -31,9 +31,7 @@ package ru.interactivelab.touchscript.clusters
 			_points.push(point);
 			markDirty();
 			
-			if (pointsCount == 1) {
-				return RESULT_FIRST_POINT_ADDED;
-			}
+			if (pointsCount == 1) return RESULT_FIRST_POINT_ADDED;
 			return RESULT_POINT_ADDED;
 		}
 		
@@ -44,9 +42,7 @@ package ru.interactivelab.touchscript.clusters
 			_points.splice(index, 1);
 			markDirty();
 			
-			if (pointsCount == 0) {
-				return RESULT_LAST_POINT_REMOVED;
-			}
+			if (pointsCount == 0) return RESULT_LAST_POINT_REMOVED;
 			return RESULT_POINT_REMOVED;
 		}
 		
