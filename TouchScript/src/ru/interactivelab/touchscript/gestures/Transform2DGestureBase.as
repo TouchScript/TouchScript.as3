@@ -50,9 +50,9 @@ package ru.interactivelab.touchscript.gestures
 				var result:String = _cluster1.removePoint(touch);
 				if (result == Cluster.RESULT_LAST_POINT_REMOVED) {
 					switch (state) {
-						case Gesture.STATE_BEGAN:
-						case Gesture.STATE_CHANGED:
-							setState(Gesture.STATE_ENDED);
+						case GestureState.BEGAN:
+						case GestureState.CHANGED:
+							setState(GestureState.ENDED);
 							break;
 					}
 				}

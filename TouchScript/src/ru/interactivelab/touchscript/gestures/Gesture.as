@@ -10,16 +10,8 @@ package ru.interactivelab.touchscript.gestures {
 	
 	public class Gesture extends InteractiveBehavior {
 		
-		public static const STATE_POSSIBLE:String				= "possible";
-		public static const STATE_BEGAN:String					= "began";
-		public static const STATE_CHANGED:String				= "changed";
-		public static const STATE_CANCELLED:String				= "cancelled";
-		public static const STATE_FAILED:String					= "failed";
-		public static const STATE_RECOGNIZED:String				= "recognized";
-		public static const STATE_ENDED:String					= STATE_RECOGNIZED;
-		
-		private var _state:String = STATE_POSSIBLE;
-		private var _previousState:String = STATE_POSSIBLE;
+		private var _state:String = GestureState.POSSIBLE;
+		private var _previousState:String = GestureState.POSSIBLE;
 		private var _shouldRecognizeWith:Array = [];
 		private var _delegate:IGestureDelegate;
 		
@@ -33,22 +25,22 @@ package ru.interactivelab.touchscript.gestures {
 			_previousState = _state;
 			_state = value;
 			switch (value) {
-				case STATE_POSSIBLE:
+				case GestureState.POSSIBLE:
 					onPossible();
 					break;
-				case STATE_BEGAN:
+				case GestureState.BEGAN:
 					onBegan();
 					break;
-				case STATE_CHANGED:
+				case GestureState.CHANGED:
 					onChanged();
 					break;
-				case STATE_RECOGNIZED:
+				case GestureState.RECOGNIZED:
 					onRecognized();
 					break;
-				case STATE_FAILED:
+				case GestureState.FAILED:
 					onFailed();
 					break;
-				case STATE_CANCELLED:
+				case GestureState.CANCELLED:
 					onCancelled();
 					break;
 			}
@@ -131,7 +123,7 @@ package ru.interactivelab.touchscript.gestures {
 		}
 		
 		protected function setState(value:String):Boolean {
-			if (value == _state && _state != STATE_CHANGED) return false;
+			if (value == _state && _state != GestureState.CHANGED) return false;
 			var newState:String = TouchManager.touch_internal::gestureChangeState(this, value);
 			$state = newState;
 			

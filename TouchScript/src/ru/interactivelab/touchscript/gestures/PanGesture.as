@@ -64,12 +64,12 @@ package ru.interactivelab.touchscript.gestures {
 			
 			if (_globalDeltaPosition.length > 0) {
 				switch (state) {
-					case Gesture.STATE_POSSIBLE:
-						setState(Gesture.STATE_BEGAN);
+					case GestureState.POSSIBLE:
+						setState(GestureState.BEGAN);
 						break;
-					case Gesture.STATE_BEGAN:
-					case Gesture.STATE_CHANGED:
-						setState(Gesture.STATE_CHANGED);
+					case GestureState.BEGAN:
+					case GestureState.CHANGED:
+						setState(GestureState.CHANGED);
 						break;
 				}
 			}

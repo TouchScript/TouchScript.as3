@@ -7,6 +7,7 @@ package
 	import ru.interactivelab.touchscript.debugging.TouchDebugger;
 	import ru.interactivelab.touchscript.events.gestures.GestureEvent;
 	import ru.interactivelab.touchscript.gestures.Gesture;
+	import ru.interactivelab.touchscript.gestures.GestureState;
 	import ru.interactivelab.touchscript.gestures.PanGesture;
 	import ru.interactivelab.touchscript.gestures.TapGesture;
 	import ru.interactivelab.touchscript.inputSources.MouseInput;
@@ -53,14 +54,14 @@ package
 		}
 		
 		private function handle_tap(e:GestureEvent):void {
-			if (e.state == Gesture.STATE_RECOGNIZED) {
+			if (e.state == GestureState.RECOGNIZED) {
 				trace("TAP", (e.target as Gesture).displayTarget.name);
 			}
 		}
 		
 		private function handle_drag(e:GestureEvent):void {
 			var target:PanGesture = e.target as PanGesture;
-			if (e.state == Gesture.STATE_BEGAN || e.state == Gesture.STATE_CHANGED) {
+			if (e.state == GestureState.BEGAN || e.state == GestureState.CHANGED) {
 				var delta:Point = target.localDeltaPosition;
 //				trace("DRAGGED", target.displayTarget.name, delta);
 				target.displayTarget.x += delta.x;

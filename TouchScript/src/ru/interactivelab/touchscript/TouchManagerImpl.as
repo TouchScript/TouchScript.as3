@@ -11,6 +11,7 @@ package ru.interactivelab.touchscript {
 	
 	import ru.interactivelab.touchscript.events.TouchManagerEvent;
 	import ru.interactivelab.touchscript.gestures.Gesture;
+	import ru.interactivelab.touchscript.gestures.GestureState;
 	import ru.interactivelab.touchscript.utils.DisplayObjectUtils;
 	import ru.interactivelab.touchscript.utils.Time;
 	import ru.valyard.behaviors.behaviors;
@@ -150,11 +151,11 @@ package ru.interactivelab.touchscript {
 		
 		touch_internal function gestureChangeState(gesture:Gesture, state:String):String {
 			switch (state) {
-				case Gesture.STATE_POSSIBLE:
+				case GestureState.POSSIBLE:
 					break;
-				case Gesture.STATE_BEGAN:
+				case GestureState.BEGAN:
 					switch (gesture.state) {
-						case Gesture.STATE_POSSIBLE:
+						case GestureState.POSSIBLE:
 							break;
 						default:
 							stateError(gesture, state);
@@ -164,41 +165,41 @@ package ru.interactivelab.touchscript {
 						recognizeGesture(gesture);
 					} else {
 						addToReset(gesture);
-						return Gesture.STATE_FAILED;
+						return GestureState.FAILED;
 					}
 					break;
-				case Gesture.STATE_CHANGED:
+				case GestureState.CHANGED:
 					switch (gesture.state) {
-						case Gesture.STATE_BEGAN:
-						case Gesture.STATE_CHANGED:
+						case GestureState.BEGAN:
+						case GestureState.CHANGED:
 							break;
 						default:
 							stateError(gesture, state);
 							break;
 					}
 					break;
-				case Gesture.STATE_FAILED:
+				case GestureState.FAILED:
 					addToReset(gesture);
 					break;
-				case Gesture.STATE_RECOGNIZED:
+				case GestureState.RECOGNIZED:
 					addToReset(gesture);
 					switch (gesture.state) {
-						case Gesture.STATE_POSSIBLE:
+						case GestureState.POSSIBLE:
 							if (gestureCanRecognize(gesture)) {
 								recognizeGesture(gesture);
 							} else {
-								return Gesture.STATE_FAILED;
+								return GestureState.FAILED;
 							}
 							break;
-						case Gesture.STATE_BEGAN:
-						case Gesture.STATE_CHANGED:
+						case GestureState.BEGAN:
+						case GestureState.CHANGED:
 							break;
 						default:
 							stateError(gesture, state);
 							break;
 					}
 					break;
-				case Gesture.STATE_CANCELLED:
+				case GestureState.CANCELLED:
 					addToReset(gesture);
 					break;
 			}
@@ -247,7 +248,7 @@ package ru.interactivelab.touchscript {
 						var canReceiveTouches:Boolean = true;
 						for each (var activeGesture:Gesture in mightBeActiveGestures) {
 							if (gesture == activeGesture) continue;
-							if ((activeGesture.state == Gesture.STATE_BEGAN || activeGesture.state == Gesture.STATE_CHANGED) && (activeGesture.canPreventGesture(gesture))) {
+							if ((activeGesture.state == GestureState.BEGAN || activeGesture.state == GestureState.CHANGED) && (activeGesture.canPreventGesture(gesture))) {
 								canReceiveTouches = false;
 								break;
 							}
@@ -460,7 +461,7 @@ package ru.interactivelab.touchscript {
 		private function resetGestures():void {
 			for each (var gesture:Gesture in _gesturesToReset) {
 				gesture.touch_internal::reset();
-				gesture.touch_internal::setState(Gesture.STATE_POSSIBLE);
+				gesture.touch_internal::setState(GestureState.POSSIBLE);
 			}
 			_gesturesToReset.length = 0;
 		}
@@ -499,9 +500,9 @@ package ru.interactivelab.touchscript {
 		
 		private function gestureIsActive(gesture:Gesture):Boolean {
 			switch (gesture.state) {
-				case Gesture.STATE_FAILED:
-				case Gesture.STATE_RECOGNIZED:
-				case Gesture.STATE_CANCELLED:
+				case GestureState.FAILED:
+				case GestureState.RECOGNIZED:
+				case GestureState.CANCELLED:
 					return false;
 				default:
 					return true;
@@ -514,7 +515,7 @@ package ru.interactivelab.touchscript {
 			for each (var otherGesture:Gesture in gestures) {
 				if (gesture == otherGesture) continue;
 				if (!gestureIsActive(otherGesture)) continue;
-				if ((otherGesture.state == Gesture.STATE_BEGAN || otherGesture.state == Gesture.STATE_CHANGED) && otherGesture.canPreventGesture(gesture)) {
+				if ((otherGesture.state == GestureState.BEGAN || otherGesture.state == GestureState.CHANGED) && otherGesture.canPreventGesture(gesture)) {
 					return false;
 				}
 			}
@@ -527,14 +528,14 @@ package ru.interactivelab.touchscript {
 			for each (var otherGesture:Gesture in gestures) {
 				if (gesture == otherGesture) continue;
 				if (!gestureIsActive(otherGesture)) continue;
-				if (!(otherGesture.state == Gesture.STATE_BEGAN || otherGesture.state == Gesture.STATE_CHANGED) && gesture.canPreventGesture(otherGesture)) {
+				if (!(otherGesture.state == GestureState.BEGAN || otherGesture.state == GestureState.CHANGED) && gesture.canPreventGesture(otherGesture)) {
 					failGesture(otherGesture);
 				}
 			}
 		}
 		
 		private function failGesture(gesture:Gesture):void {
-			gesture.touch_internal::setState(Gesture.STATE_FAILED);
+			gesture.touch_internal::setState(GestureState.FAILED);
 		}
 		
 		private function addToReset(gesture:Gesture):void {

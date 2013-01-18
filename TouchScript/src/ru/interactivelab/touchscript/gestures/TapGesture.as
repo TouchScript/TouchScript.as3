@@ -54,23 +54,23 @@ package ru.interactivelab.touchscript.gestures
 			for each (var touch:TouchPoint in touches) {
 				if (_cluster.removePoint(touch) == Cluster.RESULT_LAST_POINT_REMOVED) {
 					if (_totalMovement / TouchManager.dotsPerCentimeter >= _distanceLimit || Time.time - _startTime > _timeLimit) {
-						setState(Gesture.STATE_FAILED);
+						setState(GestureState.FAILED);
 						return;
 					}
 					var newTarget:InteractiveObject = TouchManager.getHitTarget(touch);
 					if (newTarget == null || !(this.target == newTarget || 
 					   (super.displayTarget is DisplayObjectContainer && (super.displayTarget as DisplayObjectContainer).contains(newTarget))))
 					{
-						setState(Gesture.STATE_FAILED);
+						setState(GestureState.FAILED);
 					} else {
-						setState(Gesture.STATE_RECOGNIZED);
+						setState(GestureState.RECOGNIZED);
 					}
 				}
 			}
 		}
 		
 		protected override function touchesCancelled(touches:Array):void {
-			setState(Gesture.STATE_FAILED);
+			setState(GestureState.FAILED);
 		}
 		
 		protected override function reset():void {
