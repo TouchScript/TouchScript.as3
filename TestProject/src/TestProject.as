@@ -1,6 +1,8 @@
 package
 {
 	import flash.display.Sprite;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
 	import flash.geom.Point;
 	
 	import ru.interactivelab.touchscript.TouchManager;
@@ -8,54 +10,123 @@ package
 	import ru.interactivelab.touchscript.events.gestures.GestureEvent;
 	import ru.interactivelab.touchscript.gestures.Gesture;
 	import ru.interactivelab.touchscript.gestures.GestureState;
+	import ru.interactivelab.touchscript.gestures.LongPressGesture;
 	import ru.interactivelab.touchscript.gestures.PanGesture;
+	import ru.interactivelab.touchscript.gestures.PressGesture;
+	import ru.interactivelab.touchscript.gestures.ReleaseGesture;
 	import ru.interactivelab.touchscript.gestures.TapGesture;
 	import ru.interactivelab.touchscript.inputSources.MouseInput;
 	import ru.interactivelab.touchscript.inputSources.TuioInput;
 	
+	import test.Box;
+	
 	[SWF(frameRate="60", width="1024", height="768")]
 	public class TestProject extends Sprite {
+		
+		public static const MAIN_WINDOW_PADDING:int = 20;
 		
 		private var _mouseInput:MouseInput;
 		private var _tuioInput:TuioInput;
 		
 		public function TestProject() {
+			stage.align = StageAlign.TOP_LEFT;
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			
 			TouchManager.init(stage);
 			_mouseInput = new MouseInput(stage);
 			_tuioInput = new TuioInput(stage.stageWidth, stage.stageHeight);
 			
-			var s1:Sprite = getBox(300, 0xFF0000);
-			addChild(s1);
-			s1.x = s1.y = 50;
+			// main window
+			var wnd:Box = new Box(stage.stageWidth-MAIN_WINDOW_PADDING*2, stage.stageHeight-MAIN_WINDOW_PADDING*2, 0xEEEEEE);
+			wnd.x = wnd.y = MAIN_WINDOW_PADDING;
+			addChild(wnd);
 			
-			var s2:Sprite = getBox(200, 0x00FF00);
-			s1.addChild(s2);
+			var pressGesture:PressGesture = new PressGesture(wnd);
+			pressGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_wnd_pressed);
+			var releaseGesture:ReleaseGesture = new ReleaseGesture(wnd);
+			releaseGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_wnd_released);
 			
-			var s3:Sprite = getBox(100, 0x0000FF);
-			s2.addChild(s3);
+			// tap hierarchy
+			var tap1:Box = new Box(500, 130, randomColor(), "Tap hierarchy example", "top");
+			tap1.x = MAIN_WINDOW_PADDING + 10;
+			tap1.y = MAIN_WINDOW_PADDING + 10;
+			addChild(tap1);
+			var tapGesture:TapGesture = new TapGesture(tap1);
+			tapGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_tap_tapped);
 			
-			var t:TapGesture = new TapGesture(s2);
-			t.addEventListener(GestureEvent.STATE_CHANGED, handle_tap);
-			t = new TapGesture(s1);
-			t.addEventListener(GestureEvent.STATE_CHANGED, handle_tap);
+			var tap2a:Box = new Box(220, 80, randomColor());
+			tap2a.x = 10;
+			tap2a.y = 40;
+			tap1.addChild(tap2a);
+			tapGesture = new TapGesture(tap2a);
+			tapGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_tap_tapped);
 			
-			var p:PanGesture = new PanGesture(s2);
-			p.addEventListener(GestureEvent.STATE_CHANGED, handle_drag);
+			var tap2b:Box = new Box(220, 80, randomColor());
+			tap2b.x = 500 - 220 - 10;
+			tap2b.y = 40;
+			tap1.addChild(tap2b);
+			tapGesture = new TapGesture(tap2b);
+			tapGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_tap_tapped);
+			
+			var tap3a:Box = new Box(120, 60, randomColor(), "Tap me!");
+			tap3a.x = 10;
+			tap3a.y = 10;
+			tap2a.addChild(tap3a);
+			tapGesture = new TapGesture(tap3a);
+			tapGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_tap_tapped);
+			
+			var tap3b:Box = new Box(120, 60, randomColor(), "Tap me!");
+			tap3b.x = 10;
+			tap3b.y = 10;
+			tap2b.addChild(tap3b);
+			tapGesture = new TapGesture(tap3b);
+			tapGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_tap_tapped);
+			
+			// longpress hierarchy
+			var lp1:Box = new Box(440, 130, randomColor(), "Longpress hierarchy example", "top");
+			lp1.x = stage.stageWidth - lp1.width - MAIN_WINDOW_PADDING - 10;
+			lp1.y = MAIN_WINDOW_PADDING + 10;
+			addChild(lp1);
+			var longpressGesture:LongPressGesture = new LongPressGesture(lp1);
+			longpressGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_longPressRecognized);
+			
+			var lp2:Box = new Box(220, 80, randomColor(), "Press and hold me!");
+			lp2.x = 10;
+			lp2.y = 40;
+			lp1.addChild(lp2);
+			longpressGesture = new LongPressGesture(lp2);
+			longpressGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_longPressRecognized);
 			
 			addChild(new TouchDebugger());
 		}
 		
-		private function getBox(size:uint, color:uint):Sprite {
-			var obj:Sprite = new Sprite();
-			obj.graphics.beginFill(color);
-			obj.graphics.drawRect(0, 0, size, size);
-			obj.name = "box " + size;
-			return obj;
+		private function randomColor():uint {
+			return 	((Math.random() * 0x80 + 0x80) << 16 ) +
+					((Math.random() * 0x80 + 0x80) << 8 ) +
+					(Math.random() * 0x80 + 0x80);
 		}
 		
-		private function handle_tap(e:GestureEvent):void {
+		private function handler_wnd_pressed(e:GestureEvent):void {
 			if (e.state == GestureState.RECOGNIZED) {
-				trace("TAP", (e.target as Gesture).displayTarget.name);
+				((e.target as Gesture).displayTarget as Box).setColor(0xFFEEEE);
+			}
+		}
+		
+		private function handler_wnd_released(e:GestureEvent):void {
+			if (e.state == GestureState.RECOGNIZED) {
+				((e.target as Gesture).displayTarget as Box).resetColor();
+			}
+		}
+		
+		private function handler_tap_tapped(e:GestureEvent):void {
+			if (e.state == GestureState.RECOGNIZED) {
+				((e.target as Gesture).displayTarget as Box).setColor(randomColor());
+			}
+		}
+		
+		private function handler_longPressRecognized(e:GestureEvent):void {
+			if (e.state == GestureState.RECOGNIZED) {
+				((e.target as Gesture).displayTarget as Box).setColor(randomColor());
 			}
 		}
 		
