@@ -15,16 +15,4 @@
 		<nature>com.adobe.flexbuilder.project.flexlibnature</nature>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>[source path] as3.behaviors-src</name>
-			<type>2</type>
-			<location>C:/Work/Flash/TouchScript/as3.behaviors/src</location>
-		</link>
-		<link>
-			<name>[source path] tuio.3asobj-src</name>
-			<type>2</type>
-			<location>C:/Work/Flash/TouchScript/tuio.3asobj/src</location>
-		</link>
-	</linkedResources>
 </projectDescription>
