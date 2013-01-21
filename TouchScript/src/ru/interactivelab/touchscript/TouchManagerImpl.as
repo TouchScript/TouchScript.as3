@@ -259,8 +259,8 @@ package ru.interactivelab.touchscript {
 								if (gesture.shouldReceiveTouch(touch)) touchesToReceive.push(touch);
 							}
 							if (touchesToReceive.length > 0) {
-								activeGestures.push(gesture);
 								if (!gestureTouches[gesture]) {
+									activeGestures.push(gesture);
 									gestureTouches[gesture] = touchesToReceive;
 								} else {
 									gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
@@ -283,21 +283,12 @@ package ru.interactivelab.touchscript {
 		}
 		
 		private function updateMoved():Boolean {
-			var hasItems:Boolean = false;
-			for (var i:Object in _touchesMoved) {
-				hasItems = true;
-				break;
-			}
-			if (hasItems) {
-				var targetTouches:Dictionary = new Dictionary();
-				var reallyMoved:Array = [];
-				for (i in _touchesMoved) {
-					var id:int = i as int;
-					var position:Point = _touchesMoved[id];
-					var touch:TouchPoint = _idToTouch[id];
-					delete _touchesMoved[id];
-					if (!touch) continue;
-					if (touch.position.equals(position)) continue;
+			var targetTouches:Dictionary = new Dictionary();
+			var reallyMoved:Array = [];
+			
+			for each (var touch:TouchPoint in _touches) {
+				var position:Point = _touchesMoved[touch.id];
+				if (position && !touch.position.equals(position)) {
 					touch.position = position;
 					reallyMoved.push(touch);
 					if (touch.target != null) {
@@ -308,10 +299,14 @@ package ru.interactivelab.touchscript {
 						}
 						list.push(touch);
 					}
+				} else {
+					touch.position = touch.position;
 				}
-				
+			}
+			
+			if (reallyMoved.length) {
 				var gestureTouches:Dictionary = new Dictionary();
-				var activeGestures:Array = [];
+				var activeGestures:Array = []; // no order in a Dictionary
 				for (var t:Object in targetTouches) {
 					var target:InteractiveObject = t as InteractiveObject;
 					var possibleGestures:Array = getHierarchyEndingWith(target);
@@ -323,8 +318,8 @@ package ru.interactivelab.touchscript {
 							if (gesture.hasTouchPoint(touch)) touchesToReceive.push(touch);
 						}
 						if (touchesToReceive.length > 0) {
-							activeGestures.push(gesture);
 							if (!gestureTouches[gesture]) {
+								activeGestures.push(gesture);
 								gestureTouches[gesture] = touchesToReceive;
 							} else {
 								gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
@@ -338,10 +333,11 @@ package ru.interactivelab.touchscript {
 				}
 				if (hasEventListener(TouchManagerEvent.TOUCH_POINTS_UPDATED)) 
 					dispatchEvent(new TouchManagerEvent(TouchManagerEvent.TOUCH_POINTS_UPDATED, false, false, reallyMoved));
-				
-				return true;
 			}
-			return false;
+			
+			_touchesMoved = new Dictionary();
+			
+			return reallyMoved.length > 0;
 		}
 		
 		private function updateEnded():Boolean {
@@ -362,7 +358,7 @@ package ru.interactivelab.touchscript {
 				}
 				
 				var gestureTouches:Dictionary = new Dictionary();
-				var activeGestures:Array = [];
+				var activeGestures:Array = []; // no order in a Dictionary
 				for (var t:Object in targetTouches) {
 					var target:InteractiveObject = t as InteractiveObject;
 					var possibleGestures:Array = getHierarchyEndingWith(target);
@@ -374,8 +370,8 @@ package ru.interactivelab.touchscript {
 							if (gesture.hasTouchPoint(touch)) touchesToReceive.push(touch);
 						}
 						if (touchesToReceive.length > 0) {
-							activeGestures.push(gesture);
 							if (!gestureTouches[gesture]) {
+								activeGestures.push(gesture);
 								gestureTouches[gesture] = touchesToReceive;
 							} else {
 								gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
@@ -414,7 +410,7 @@ package ru.interactivelab.touchscript {
 				}
 				
 				var gestureTouches:Dictionary = new Dictionary();
-				var activeGestures:Array = [];
+				var activeGestures:Array = []; // no order in a Dictionary
 				for (var t:Object in targetTouches) {
 					var target:InteractiveObject = t as InteractiveObject;
 					var possibleGestures:Array = getHierarchyEndingWith(target);
@@ -426,8 +422,8 @@ package ru.interactivelab.touchscript {
 							if (gesture.hasTouchPoint(touch)) touchesToReceive.push(touch);
 						}
 						if (touchesToReceive.length > 0) {
-							activeGestures.push(gesture);
 							if (!gestureTouches[gesture]) {
+								activeGestures.push(gesture);
 								gestureTouches[gesture] = touchesToReceive;
 							} else {
 								gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);

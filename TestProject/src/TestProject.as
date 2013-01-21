@@ -1,5 +1,4 @@
-package
-{
+package {
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -97,6 +96,28 @@ package
 			longpressGesture = new LongPressGesture(lp2);
 			longpressGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_longPressRecognized);
 			
+			// movable/scalable stuff
+			var box1:Box = new Box(800, 400, randomColor(), "Scalable container", "top");
+			box1.x = MAIN_WINDOW_PADDING + 10;
+			box1.y = 200;
+			addChild(box1);
+			var panGesture:PanGesture = new PanGesture(box1);
+			panGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_pan);
+			
+			var box2a:Box = new Box(300, 240, randomColor(), "Drag me");
+			box2a.x = 20
+			box2a.y = 50;
+			box1.addChild(box2a);
+			panGesture = new PanGesture(box2a);
+			panGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_pan);
+			
+			var box2b:Box = new Box(300, 240, randomColor(), "Drag me");
+			box2b.x = 340
+			box2b.y = 50;
+			box1.addChild(box2b);
+			panGesture = new PanGesture(box2b);
+			panGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_pan);
+			
 			addChild(new TouchDebugger());
 		}
 		
@@ -130,11 +151,10 @@ package
 			}
 		}
 		
-		private function handle_drag(e:GestureEvent):void {
+		private function handler_pan(e:GestureEvent):void {
 			var target:PanGesture = e.target as PanGesture;
 			if (e.state == GestureState.BEGAN || e.state == GestureState.CHANGED) {
 				var delta:Point = target.localDeltaPosition;
-//				trace("DRAGGED", target.displayTarget.name, delta);
 				target.displayTarget.x += delta.x;
 				target.displayTarget.y += delta.y;
 			}
