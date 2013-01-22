@@ -10,10 +10,10 @@ package ru.interactivelab.touchscript.gestures
 	public class Transform2DGestureBase extends Gesture {
 		
 		protected var _cluster1:Cluster1 = new Cluster1();
-		protected var _localTransformCenter:Point;
-		protected var _previousLocalTransformCenter:Point;
-		protected var _globalTransformCenter:Point;
-		protected var _previousGlobalTransformCenter:Point;
+		protected var _localTransformCenter:Point = new Point();
+		protected var _previousLocalTransformCenter:Point = new Point();
+		protected var _globalTransformCenter:Point = new Point();
+		protected var _previousGlobalTransformCenter:Point = new Point();
 		
 		public function get localTransformCenter():Point {
 			return _localTransformCenter;

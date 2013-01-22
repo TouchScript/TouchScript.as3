@@ -8,6 +8,7 @@ package {
 	import ru.interactivelab.touchscript.TouchManager;
 	import ru.interactivelab.touchscript.debugging.TouchDebugger;
 	import ru.interactivelab.touchscript.events.gestures.GestureEvent;
+	import ru.interactivelab.touchscript.gestures.FlickGesture;
 	import ru.interactivelab.touchscript.gestures.Gesture;
 	import ru.interactivelab.touchscript.gestures.GestureState;
 	import ru.interactivelab.touchscript.gestures.LongPressGesture;
@@ -146,6 +147,15 @@ package {
 			panGesture.shouldRecognizeSimultaneouslyWith(rotateGesture, true);
 			scaleGesture.shouldRecognizeSimultaneouslyWith(rotateGesture, true);
 			
+			// flick
+			var flick1:Box = new Box(200, 100, randomColor(), "Flick me");
+			flick1.name = "flick1";
+			flick1.x = MAIN_WINDOW_PADDING + 10;
+			flick1.y = 640;
+			addChild(flick1);
+			var flickGesture:FlickGesture = new FlickGesture(flick1);
+			flickGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_flick);
+			
 			addChild(new TouchDebugger());
 		}
 		
@@ -207,6 +217,12 @@ package {
 				matrix.rotate(target.localDeltaRotation * Consts.DEGREES_TO_RADIANS);
 				matrix.translate(target.localTransformCenter.x, target.localTransformCenter.y);
 				target.displayTarget.transform.matrix = matrix;
+			}
+		}
+		
+		private function handler_flick(e:GestureEvent):void {
+			if (e.state == GestureState.RECOGNIZED) {
+				((e.target as Gesture).displayTarget as Box).setColor(randomColor());
 			}
 		}
 		
