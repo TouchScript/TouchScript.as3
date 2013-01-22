@@ -16,10 +16,11 @@
 package ru.interactivelab.touchscript.inputSources {
 	import flash.display.Stage;
 	import flash.events.TouchEvent;
-	import flash.geom.Point;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	import flash.utils.Dictionary;
+	
+	import ru.interactivelab.touchscript.math.Vector2;
 
 	public class WMTouchInput extends InputSource {
 		
@@ -39,7 +40,7 @@ package ru.interactivelab.touchscript.inputSources {
 		
 		private function handler_touchBegin(event:TouchEvent):void {
 			if (_cursorToInternalId[event.touchPointID] != undefined) return;
-			_cursorToInternalId[event.touchPointID] = beginTouch(new Point(event.stageX, event.stageY));
+			_cursorToInternalId[event.touchPointID] = beginTouch(new Vector2(event.stageX, event.stageY));
 		}
 		
 		private function handler_touchEnd(event:TouchEvent):void {
@@ -50,7 +51,7 @@ package ru.interactivelab.touchscript.inputSources {
 		
 		private function handler_touchMove(event:TouchEvent):void {
 			if (_cursorToInternalId[event.touchPointID] == undefined) return;
-			moveTouch(_cursorToInternalId[event.touchPointID], new Point(event.stageX, event.stageY));
+			moveTouch(_cursorToInternalId[event.touchPointID], new Vector2(event.stageX, event.stageY));
 
 		}
 	}

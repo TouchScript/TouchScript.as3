@@ -14,10 +14,12 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 package ru.interactivelab.touchscript.clusters {
-	import flash.geom.Point;
-	
 	import ru.interactivelab.touchscript.TouchPoint;
+	import ru.interactivelab.touchscript.math.Vector2;
+	import ru.interactivelab.touchscript.touch_internal;
 
+	use namespace touch_internal;
+	
 	public class Cluster {
 		
 		public static const RESULT_NOTHING:String				= "resultNothing";
@@ -75,32 +77,28 @@ package ru.interactivelab.touchscript.clusters {
 			_dirty = false;
 		}
 		
-		protected function _getCenterPosition(touches:Array):Point {
+		protected function _getCenterPosition(touches:Array):Vector2 {
 			var length:int = touches.length;
 			if (length == 0) throw new Error("No points in cluster.");
 			if (length == 1) return (touches[0] as TouchPoint).position;
 			
-			var x:Number = 0;
-			var y:Number = 0;
+			var position:Vector2 = new Vector2();
 			for each (var point:TouchPoint in touches) {
-				x += point.position.x;
-				y += point.position.y;
+				position.$add(point.position);
 			}
-			return new Point(x/length, y/length);
+			return position.$divide(length);
 		}
 		
-		protected function _getPreviousCenterPosition(touches:Array):Point {
+		protected function _getPreviousCenterPosition(touches:Array):Vector2 {
 			var length:int = touches.length;
 			if (length == 0) throw new Error("No points in cluster.");
 			if (length == 1) return (touches[0] as TouchPoint).previousPosition;
 			
-			var x:Number = 0;
-			var y:Number = 0;
+			var position:Vector2 = new Vector2();
 			for each (var point:TouchPoint in touches) {
-				x += point.previousPosition.x;
-				y += point.previousPosition.y;
+				position.$add(point.previousPosition);
 			}
-			return new Point(x/length, y/length);
+			return position.$divide(length);
 		}
 		
 		protected function getHash(touches:Array):String {

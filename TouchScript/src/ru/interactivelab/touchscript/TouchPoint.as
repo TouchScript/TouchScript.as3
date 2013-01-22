@@ -15,46 +15,43 @@
 */
 package ru.interactivelab.touchscript {
 	import flash.display.InteractiveObject;
-	import flash.geom.Point;
+	
+	import ru.interactivelab.touchscript.math.Vector2;
 	
 	use namespace touch_internal;
 	
 	public class TouchPoint {
 		
-		private var _id:int;
-		private var _position:Point;
-		private var _previousPosition:Point;
-		private var _target:InteractiveObject;
+		touch_internal var $id:int;
+		touch_internal var $position:Vector2;
+		touch_internal var $previousPosition:Vector2;
+		touch_internal var $target:InteractiveObject;
 		
 		public function get id():int {
-			return _id;
+			return $id;
 		}
 		
-		public function get position():Point {
-			return _position;
+		public function get position():Vector2 {
+			return $position;
 		}
 		
-		public function set position(value:Point):void {
-			_previousPosition = _position;
-			_position = value;
+		public function set position(value:Vector2):void {
+			$previousPosition = $position;
+			$position = value;
 		}
 		
-		public function get previousPosition():Point {
-			return _previousPosition;
+		public function get previousPosition():Vector2 {
+			return $previousPosition;
 		}
 		
 		public function get target():InteractiveObject {
-			return _target;
+			return $target;
 		}
 		
-		touch_internal function set target(value:InteractiveObject):void {
-			_target = value;
-		}
-		
-		public function TouchPoint(id:int, position:Point) {
-			_id = id;
-			_position = position.clone();
-			_previousPosition = position.clone();
+		public function TouchPoint(id:int, position:Vector2) {
+			$id = id;
+			$position = position;
+			$previousPosition = position;
 		}
 	}
 }

@@ -14,16 +14,16 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 package ru.interactivelab.touchscript.inputSources {
-	import flash.geom.Point;
 	
 	import ru.interactivelab.touchscript.TouchManager;
+	import ru.interactivelab.touchscript.math.Vector2;
 
 	public class InputSource {
 		public function InputSource() {}
 		
 		public var coordinatesRemapper:ICoordinatesRemapper;
 		
-		protected function beginTouch(position:Point):int {
+		protected function beginTouch(position:Vector2):int {
 			if (coordinatesRemapper != null) position = coordinatesRemapper.remap(position);
 			return TouchManager.beginTouch(position);
 		}
@@ -32,7 +32,7 @@ package ru.interactivelab.touchscript.inputSources {
 			TouchManager.endTouch(id);
 		}
 		
-		protected function moveTouch(id:int, position:Point):void {
+		protected function moveTouch(id:int, position:Vector2):void {
 			if (coordinatesRemapper != null) position = coordinatesRemapper.remap(position);
 			TouchManager.moveTouch(id, position);
 		}

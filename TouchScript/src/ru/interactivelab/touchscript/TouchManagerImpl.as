@@ -21,12 +21,12 @@ package ru.interactivelab.touchscript {
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
 	import ru.interactivelab.touchscript.events.TouchManagerEvent;
 	import ru.interactivelab.touchscript.gestures.Gesture;
 	import ru.interactivelab.touchscript.gestures.GestureState;
+	import ru.interactivelab.touchscript.math.Vector2;
 	import ru.interactivelab.touchscript.utils.DisplayObjectUtils;
 	import ru.interactivelab.touchscript.utils.Time;
 	import ru.valyard.behaviors.behaviors;
@@ -111,12 +111,12 @@ package ru.interactivelab.touchscript {
 		
 		public function getHitTarget(touch:TouchPoint):InteractiveObject {
 			if (!_initialized) initError();
-			var target:InteractiveObject = DisplayObjectUtils.getTopTarget(_stage, touch.position);
+			var target:InteractiveObject = DisplayObjectUtils.getTopTarget(_stage, touch.position.toPoint());
 			// TODO: HitTests
 			return target;
 		}
 		
-		public function beginTouch(position:Point):int {
+		public function beginTouch(position:Vector2):int {
 			var touch:TouchPoint = new TouchPoint(_nextTouchPointId++, position);
 			_touchesBegan.push(touch);
 			return touch.id;
@@ -154,8 +154,8 @@ package ru.interactivelab.touchscript {
 			_touchesCancelled.push(touch);
 		}
 		
-		public function moveTouch(id:int, position:Point):void {
-			_touchesMoved[id] = position.clone();
+		public function moveTouch(id:int, position:Vector2):void {
+			_touchesMoved[id] = position;
 		}
 		
 		//--------------------------------------------------------------------------
@@ -236,7 +236,7 @@ package ru.interactivelab.touchscript {
 				for each (var touch:TouchPoint in _touchesBegan) {
 					_touches.push(touch);
 					_idToTouch[touch.id] = touch;
-					touch.touch_internal::target = getHitTarget(touch);
+					touch.touch_internal::$target = getHitTarget(touch);
 					
 					if (touch.target != null) {
 						var list:Array = targetTouches[touch.target];
@@ -286,7 +286,7 @@ package ru.interactivelab.touchscript {
 				}
 				
 				for each (gesture in activeGestures) {
-					if (gestureIsActive(gesture)) gesture.touch_internal::touchesBegan(gestureTouches[gesture]);
+					if (gestureIsActive(gesture)) gesture.touch_internal::$touchesBegan(gestureTouches[gesture]);
 				}
 				if (hasEventListener(TouchManagerEvent.TOUCH_POINTS_ADDED)) 
 					dispatchEvent(new TouchManagerEvent(TouchManagerEvent.TOUCH_POINTS_ADDED, false, false, _touchesBegan));
@@ -302,7 +302,7 @@ package ru.interactivelab.touchscript {
 			var reallyMoved:Array = [];
 			
 			for each (var touch:TouchPoint in _touches) {
-				var position:Point = _touchesMoved[touch.id];
+				var position:Vector2 = _touchesMoved[touch.id];
 				if (position && !touch.position.equals(position)) {
 					touch.position = position;
 					reallyMoved.push(touch);
@@ -344,7 +344,7 @@ package ru.interactivelab.touchscript {
 				}
 				
 				for each (gesture in activeGestures) {
-					if (gestureIsActive(gesture)) gesture.touch_internal::touchesMoved(gestureTouches[gesture]);
+					if (gestureIsActive(gesture)) gesture.touch_internal::$touchesMoved(gestureTouches[gesture]);
 				}
 				if (hasEventListener(TouchManagerEvent.TOUCH_POINTS_UPDATED)) 
 					dispatchEvent(new TouchManagerEvent(TouchManagerEvent.TOUCH_POINTS_UPDATED, false, false, reallyMoved));
@@ -396,7 +396,7 @@ package ru.interactivelab.touchscript {
 				}
 				
 				for each (gesture in activeGestures) {
-					if (gestureIsActive(gesture)) gesture.touch_internal::touchesEnded(gestureTouches[gesture]);
+					if (gestureIsActive(gesture)) gesture.touch_internal::$touchesEnded(gestureTouches[gesture]);
 				}
 				if (hasEventListener(TouchManagerEvent.TOUCH_POINTS_REMOVED)) 
 					dispatchEvent(new TouchManagerEvent(TouchManagerEvent.TOUCH_POINTS_REMOVED, false, false, _touchesEnded));
@@ -448,7 +448,7 @@ package ru.interactivelab.touchscript {
 				}
 				
 				for each (gesture in activeGestures) {
-					if (gestureIsActive(gesture)) gesture.touch_internal::touchesCancelled(gestureTouches[gesture]);
+					if (gestureIsActive(gesture)) gesture.touch_internal::$touchesCancelled(gestureTouches[gesture]);
 				}
 				if (hasEventListener(TouchManagerEvent.TOUCH_POINTS_CANCELLED)) 
 					dispatchEvent(new TouchManagerEvent(TouchManagerEvent.TOUCH_POINTS_CANCELLED, false, false, _touchesCancelled));
@@ -471,8 +471,8 @@ package ru.interactivelab.touchscript {
 		
 		private function resetGestures():void {
 			for each (var gesture:Gesture in _gesturesToReset) {
-				gesture.touch_internal::reset();
-				gesture.touch_internal::setState(GestureState.POSSIBLE);
+				gesture.touch_internal::$reset();
+				gesture.touch_internal::$setState(GestureState.POSSIBLE);
 			}
 			_gesturesToReset.length = 0;
 		}
@@ -546,7 +546,7 @@ package ru.interactivelab.touchscript {
 		}
 		
 		private function failGesture(gesture:Gesture):void {
-			gesture.touch_internal::setState(GestureState.FAILED);
+			gesture.touch_internal::$setState(GestureState.FAILED);
 		}
 		
 		private function addToReset(gesture:Gesture):void {

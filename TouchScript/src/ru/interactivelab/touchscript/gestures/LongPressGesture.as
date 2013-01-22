@@ -16,24 +16,27 @@
 package ru.interactivelab.touchscript.gestures {
 	import flash.display.InteractiveObject;
 	import flash.events.TimerEvent;
-	import flash.geom.Point;
 	import flash.utils.Timer;
 	
 	import ru.interactivelab.touchscript.TouchManager;
 	import ru.interactivelab.touchscript.TouchPoint;
 	import ru.interactivelab.touchscript.clusters.Cluster;
 	import ru.interactivelab.touchscript.clusters.Cluster1;
+	import ru.interactivelab.touchscript.math.Vector2;
+	import ru.interactivelab.touchscript.touch_internal;
+	
+	use namespace touch_internal;
 	
 	public class LongPressGesture extends Gesture {
 		
 		private var _cluster:Cluster1 = new Cluster1();
-		private var _totalMovement:Point = new Point();
+		private var _totalMovement:Vector2 = new Vector2();
 		private var _timer:Timer = new Timer(0, 1);
 		
 		private var _maxTouches:int = int.MAX_VALUE;
 		private var _timeToPress:Number = 1;
 		private var _distanceLimit:Number = Number.MAX_VALUE;
-		private var _screenPressCoordinates:Point;
+		private var _screenPressCoordinates:Vector2 = Vector2.ZERO;
 		
 		public function get maxTouches():int {
 			return _maxTouches;
@@ -61,8 +64,8 @@ package ru.interactivelab.touchscript.gestures {
 			_distanceLimit = value;
 		}
 		
-		public function get screenPressCoordinates():Point {
-			return _screenPressCoordinates.clone();
+		public function get screenPressCoordinates():Vector2 {
+			return _screenPressCoordinates;
 		}
 		
 		public function LongPressGesture(target:InteractiveObject, ...params) {
@@ -86,8 +89,9 @@ package ru.interactivelab.touchscript.gestures {
 		
 		protected override function touchesMoved(touches:Array):void {
 			_cluster.invalidate();
-			_totalMovement.add(_cluster.getCenterPosition().subtract(_cluster.getPreviousCenterPosition()));
-			if (_totalMovement.length/TouchManager.dotsPerCentimeter >= _distanceLimit) setState(GestureState.FAILED);
+			_totalMovement.$add(_cluster.getCenterPosition()).$subtract(_cluster.getPreviousCenterPosition());
+			var dpiDistanceLimit:Number = _distanceLimit * TouchManager.dotsPerCentimeter;
+			if (_totalMovement.sqrMagnitude >= dpiDistanceLimit * dpiDistanceLimit) setState(GestureState.FAILED);
 		}
 		
 		protected override function touchesEnded(touches:Array):void {
@@ -104,6 +108,7 @@ package ru.interactivelab.touchscript.gestures {
 		protected override function reset():void {
 			_cluster.removeAllPoints();
 			_timer.stop();
+			_totalMovement.$set(0, 0);
 		}
 		
 		private function handler_timer(event:TimerEvent):void {

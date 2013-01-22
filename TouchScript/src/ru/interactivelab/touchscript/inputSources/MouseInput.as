@@ -16,7 +16,8 @@
 package ru.interactivelab.touchscript.inputSources {
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
-	import flash.geom.Point;
+	
+	import ru.interactivelab.touchscript.math.Vector2;
 
 	public class MouseInput extends InputSource {
 		
@@ -33,7 +34,7 @@ package ru.interactivelab.touchscript.inputSources {
 		}
 		
 		private function handler_mouseDown(event:MouseEvent):void {
-			_mousePointId = beginTouch(new Point(event.stageX, event.stageY));
+			_mousePointId = beginTouch(new Vector2(event.stageX, event.stageY));
 		}
 		
 		private function handler_mouseUp(event:MouseEvent):void {
@@ -44,7 +45,7 @@ package ru.interactivelab.touchscript.inputSources {
 		
 		private function handler_mouseMove(event:MouseEvent):void {
 			if (_mousePointId == -1) return;
-			moveTouch(_mousePointId, new Point(event.stageX, event.stageY));
+			moveTouch(_mousePointId, new Vector2(event.stageX, event.stageY));
 		}
 		
 	}

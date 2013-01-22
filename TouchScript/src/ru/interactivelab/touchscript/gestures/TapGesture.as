@@ -61,7 +61,7 @@ package ru.interactivelab.touchscript.gestures {
 		
 		protected override function touchesMoved(touches:Array):void {
 			_cluster.invalidate();
-			_totalMovement += _cluster.getCenterPosition().subtract(_cluster.getPreviousCenterPosition()).length;
+			_totalMovement += _cluster.getCenterPosition().subtract(_cluster.getPreviousCenterPosition()).magnitude;
 		}
 		
 		protected override function touchesEnded(touches:Array):void {

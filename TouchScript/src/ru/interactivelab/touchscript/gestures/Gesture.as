@@ -81,7 +81,7 @@ package ru.interactivelab.touchscript.gestures {
 		
 		public function Gesture(target:InteractiveObject, ...params) {
 			super(target, params);
-			touch_internal::reset();
+			touch_internal::$reset();
 		}
 		
 		public function hasTouchPoint(point:TouchPoint):Boolean {
@@ -157,25 +157,25 @@ package ru.interactivelab.touchscript.gestures {
 		//
 		//--------------------------------------------------------------------------
 		
-		touch_internal function setState(value:String):void {
+		touch_internal function $setState(value:String):void {
 			setState(value);
 		}
 		
-		touch_internal function reset():void {
+		touch_internal function $reset():void {
 			_activeTouches.length = 0;
 			reset();
 		}
 		
-		touch_internal function touchesBegan(touches:Array):void {
+		touch_internal function $touchesBegan(touches:Array):void {
 			_activeTouches = _activeTouches.concat(touches);
 			touchesBegan(touches);
 		}
 		
-		touch_internal function touchesMoved(touches:Array):void {
+		touch_internal function $touchesMoved(touches:Array):void {
 			touchesMoved(touches);
 		}
 		
-		touch_internal function touchesEnded(touches:Array):void {
+		touch_internal function $touchesEnded(touches:Array):void {
 			for each (var touch:TouchPoint in touches) {
 				var index:int = _activeTouches.indexOf(touch);
 				if (index > -1) _activeTouches.splice(index, 1);
@@ -183,7 +183,7 @@ package ru.interactivelab.touchscript.gestures {
 			touchesEnded(touches);
 		}
 		
-		touch_internal function touchesCancelled(touches:Array):void {
+		touch_internal function $touchesCancelled(touches:Array):void {
 			for each (var touch:TouchPoint in touches) {
 				var index:int = _activeTouches.indexOf(touch);
 				if (index > -1) _activeTouches.splice(index, 1);

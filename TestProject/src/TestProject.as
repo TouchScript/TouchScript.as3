@@ -21,6 +21,7 @@ package {
 	import ru.interactivelab.touchscript.inputSources.MouseInput;
 	import ru.interactivelab.touchscript.inputSources.TuioInput;
 	import ru.interactivelab.touchscript.math.Consts;
+	import ru.interactivelab.touchscript.math.Vector2;
 	
 	import test.Box;
 	
@@ -192,7 +193,7 @@ package {
 		private function handler_pan(e:GestureEvent):void {
 			var target:PanGesture = e.target as PanGesture;
 			if (e.state == GestureState.BEGAN || e.state == GestureState.CHANGED) {
-				var delta:Point = target.localDeltaPosition;
+				var delta:Vector2 = target.localDeltaPosition;
 				target.displayTarget.x += delta.x;
 				target.displayTarget.y += delta.y;
 			}

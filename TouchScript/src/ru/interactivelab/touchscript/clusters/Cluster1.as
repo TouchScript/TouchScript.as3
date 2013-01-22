@@ -14,7 +14,7 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 package ru.interactivelab.touchscript.clusters {
-	import flash.geom.Point;
+	import ru.interactivelab.touchscript.math.Vector2;
 
 	public class Cluster1 extends Cluster {
 		
@@ -26,11 +26,11 @@ package ru.interactivelab.touchscript.clusters {
 			return _points.length > 0;
 		}
 		
-		public function getCenterPosition():Point {
+		public function getCenterPosition():Vector2 {
 			return _getCenterPosition(_points);
 		}
 		
-		public function getPreviousCenterPosition():Point {
+		public function getPreviousCenterPosition():Vector2 {
 			return _getPreviousCenterPosition(_points);
 		}
 		

@@ -15,17 +15,20 @@
 */
 package ru.interactivelab.touchscript.gestures {
 	import flash.display.InteractiveObject;
-	import flash.geom.Point;
 	
 	import ru.interactivelab.touchscript.TouchManager;
+	import ru.interactivelab.touchscript.math.Vector2;
+	import ru.interactivelab.touchscript.touch_internal;
+	
+	use namespace touch_internal;
 	
 	public class PanGesture extends Transform2DGestureBase {
 		
-		private var _movementBuffer:Point = new Point();
+		private var _movementBuffer:Vector2 = new Vector2();
 		private var _isMoving:Boolean = false;
 		private var _movementThreshold:Number = 0.5;
-		private var _globalDeltaPosition:Point = new Point();
-		private var _localDeltaPosition:Point = new Point();
+		private var _globalDeltaPosition:Vector2 = Vector2.ZERO;
+		private var _localDeltaPosition:Vector2 = Vector2.ZERO;
 		
 		public function get movementThreshold():Number {
 			return _movementThreshold;
@@ -35,12 +38,12 @@ package ru.interactivelab.touchscript.gestures {
 			_movementThreshold = value;
 		}
 		
-		public function get globalDeltaPosition():Point {
-			return _globalDeltaPosition.clone();
+		public function get globalDeltaPosition():Vector2 {
+			return _globalDeltaPosition;
 		}
 		
-		public function get localDeltaPosition():Point {
-			return _localDeltaPosition.clone();
+		public function get localDeltaPosition():Vector2 {
+			return _localDeltaPosition;
 		}
 		
 		public function PanGesture(target:InteractiveObject, ...params) {
@@ -59,10 +62,9 @@ package ru.interactivelab.touchscript.gestures {
 				_globalDeltaPosition = _globalTransformCenter.subtract(_previousGlobalTransformCenter);
 				_localDeltaPosition = _localTransformCenter.subtract(_previousLocalTransformCenter);
 			} else {
-				_movementBuffer.x += _globalTransformCenter.x - _previousGlobalTransformCenter.x;
-				_movementBuffer.y += _globalTransformCenter.y - _previousGlobalTransformCenter.y;
+				_movementBuffer.$add(_globalTransformCenter).$subtract(_previousGlobalTransformCenter);
 				var dpiMovementThreshold:Number = _movementThreshold * TouchManager.dotsPerCentimeter;
-				if (_movementBuffer.length > dpiMovementThreshold) {
+				if (_movementBuffer.sqrMagnitude > dpiMovementThreshold * dpiMovementThreshold) {
 					_isMoving = true;
 					_previousGlobalTransformCenter = _globalTransformCenter.subtract(_movementBuffer);
 					_localTransformCenter = globalToLocalPosition(_globalTransformCenter);
@@ -77,7 +79,7 @@ package ru.interactivelab.touchscript.gestures {
 				}
 			}
 			
-			if (_globalDeltaPosition.length > 0) {
+			if (_globalDeltaPosition.sqrMagnitude > 0) {
 				switch (state) {
 					case GestureState.POSSIBLE:
 						setState(GestureState.BEGAN);
@@ -97,16 +99,13 @@ package ru.interactivelab.touchscript.gestures {
 		
 		protected override function resetGestureProperties():void {
 			super.resetGestureProperties();
-			_globalDeltaPosition.x = 0;
-			_globalDeltaPosition.y = 0;
-			_localDeltaPosition.x = 0;
-			_localDeltaPosition.y = 0;
+			_globalDeltaPosition = Vector2.ZERO;
+			_localDeltaPosition = Vector2.ZERO;
 		}
 		
 		private function resetMovement():void {
 			_isMoving = false;
-			_movementBuffer.x = 0;
-			_movementBuffer.y = 0;
+			_movementBuffer.$set(0, 0);
 		}
 		
 		

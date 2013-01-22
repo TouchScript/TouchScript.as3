@@ -15,9 +15,12 @@
 */
 package ru.interactivelab.touchscript.clusters {
 	import flash.errors.IllegalOperationError;
-	import flash.geom.Point;
 	
 	import ru.interactivelab.touchscript.TouchPoint;
+	import ru.interactivelab.touchscript.math.Vector2;
+	import ru.interactivelab.touchscript.touch_internal;
+	
+	use namespace touch_internal;
 	
 	public class Cluster2 extends Cluster {
 		
@@ -26,7 +29,8 @@ package ru.interactivelab.touchscript.clusters {
 		
 		private var _cluster1:Array = [];
 		private var _cluster2:Array = [];
-		private var _minPointsDistance:Number = 1;
+		private var _minPointsDistance:Number;
+		private var _minPointsDistanceSquared:Number;
 		
 		public function get minPointsDistance():Number {
 			return _minPointsDistance;
@@ -34,6 +38,7 @@ package ru.interactivelab.touchscript.clusters {
 		
 		public function set minPointsDistance(value:Number):void {
 			_minPointsDistance = value;
+			_minPointsDistanceSquared = value * value;
 		}
 		
 		public function get hasClusters():Boolean {
@@ -41,7 +46,7 @@ package ru.interactivelab.touchscript.clusters {
 			for each (var p1:TouchPoint in _points) {
 				for each (var p2:TouchPoint in _points) {
 					if (p1 == p2) continue;
-					if (Point.distance(p1.position, p2.position) > _minPointsDistance) return true;
+					if (Vector2.sqrDistance(p1.position, p2.position) >= _minPointsDistanceSquared) return true;
 				}
 			}
 			return false;
@@ -49,13 +54,14 @@ package ru.interactivelab.touchscript.clusters {
 		
 		public function Cluster2() {
 			super();
+			minPointsDistance = 1;
 		}
 		
-		public function getCenterPosition(id:int):Point {
+		public function getCenterPosition(id:int):Vector2 {
 			if (!hasClusters) throw new IllegalOperationError("Cluster has less than 2 points.");
 			if (_dirty) distributePoints();
 			
-			var result:Point;
+			var result:Vector2;
 			switch (id) {
 				case CLUSTER1:
 					result = _getCenterPosition(_cluster1);
@@ -69,11 +75,11 @@ package ru.interactivelab.touchscript.clusters {
 			return result;
 		}
 		
-		public function getPreviousCenterPosition(id:int):Point {
+		public function getPreviousCenterPosition(id:int):Vector2 {
 			if (!hasClusters) throw new IllegalOperationError("Cluster has less than 2 points.");
 			if (_dirty) distributePoints();
 			
-			var result:Point;
+			var result:Vector2;
 			switch (id) {
 				case CLUSTER1:
 					result = _getPreviousCenterPosition(_cluster1);
@@ -102,8 +108,8 @@ package ru.interactivelab.touchscript.clusters {
 			var hash2:String = "#";
 			
 			while (oldHash1 != hash1 || oldHash2 != hash2) {
-				var center1:Point = _getCenterPosition(_cluster1);
-				var center2:Point = _getCenterPosition(_cluster2);
+				var center1:Vector2 = _getCenterPosition(_cluster1);
+				var center2:Vector2 = _getCenterPosition(_cluster2);
 				var obj1:TouchPoint;
 				var obj2:TouchPoint;
 				
@@ -112,13 +118,13 @@ package ru.interactivelab.touchscript.clusters {
 				var maxDist2:Number = Number.NEGATIVE_INFINITY;
 				for (var i:int = 0; i < total; i++) {
 					var obj:TouchPoint = _points[i];
-					var dist:Number = Point.distance(center1, obj.position);
+					var dist:Number = Vector2.sqrDistance(center1, obj.position);
 					if (dist > maxDist2) {
 						maxDist2 = dist;
 						obj2 = obj;
 					}
 					
-					dist = Point.distance(center2, obj.position);
+					dist = Vector2.sqrDistance(center2, obj.position);
 					if (dist > maxDist1) {
 						maxDist1 = dist;
 						obj1 = obj;
@@ -127,8 +133,7 @@ package ru.interactivelab.touchscript.clusters {
 				
 				// If it is the same point it means that this point is too far away from both clusters and has to be in a separate cluster
 				if (obj1 == obj2) {
-					center1.x = (center1.x + center2.x) * .5;
-					center1.y = (center1.y + center2.y) * .5;
+					center1 = center1.add(center2).$multiply(.5);
 					center2 = obj2.position;
 				} else {
 					center1 = obj1.position;
@@ -140,7 +145,7 @@ package ru.interactivelab.touchscript.clusters {
 				
 				for (i = 0; i < total; i++) {
 					obj = _points[i];
-					if (Point.distance(center1, obj.position) < Point.distance(center2, obj.position)) {
+					if (Vector2.sqrDistance(center1, obj.position) < Vector2.sqrDistance(center2, obj.position)) {
 						_cluster1.push(obj);
 					} else {
 						_cluster2.push(obj);

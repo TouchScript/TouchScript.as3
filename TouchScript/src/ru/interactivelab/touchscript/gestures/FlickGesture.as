@@ -15,19 +15,22 @@
 */
 package ru.interactivelab.touchscript.gestures {
 	import flash.display.InteractiveObject;
-	import flash.geom.Point;
 	
 	import ru.interactivelab.touchscript.TouchManager;
 	import ru.interactivelab.touchscript.TouchPoint;
 	import ru.interactivelab.touchscript.clusters.Cluster;
 	import ru.interactivelab.touchscript.clusters.Cluster1;
+	import ru.interactivelab.touchscript.math.Vector2;
+	import ru.interactivelab.touchscript.touch_internal;
 	import ru.interactivelab.touchscript.utils.Time;
+	
+	use namespace touch_internal;
 	
 	public class FlickGesture extends Gesture {
 		
 		private var _cluster:Cluster1 = new Cluster1();
 		private var _moving:Boolean = false;
-		private var _movementBuffer:Point = new Point();
+		private var _movementBuffer:Vector2 = new Vector2();
 		private var _positionDeltas:Array = [];
 		private var _timeDeltas:Array = [];
 		private var _previousTime:Number = 0;
@@ -37,7 +40,7 @@ package ru.interactivelab.touchscript.gestures {
 		private var _movementThreshold:Number = .5;
 		private var _horizontal:Boolean = false;
 		private var _vertical:Boolean = false;
-		private var _screenFlickVector:Point = new Point();
+		private var _screenFlickVector:Vector2 = Vector2.ZERO;
 		
 		public function get flickTime():Number {
 			return _flickTime;
@@ -79,7 +82,7 @@ package ru.interactivelab.touchscript.gestures {
 			_vertical = value;
 		}
 		
-		public function get screenFlickVector():Point {
+		public function get screenFlickVector():Vector2 {
 			return _screenFlickVector;
 		}
 		
@@ -95,11 +98,11 @@ package ru.interactivelab.touchscript.gestures {
 		
 		protected override function touchesMoved(touches:Array):void {
 			_cluster.invalidate();
-			var delta:Point = _cluster.getCenterPosition().subtract(_cluster.getPreviousCenterPosition());
+			var delta:Vector2 = _cluster.getCenterPosition().subtract(_cluster.getPreviousCenterPosition());
 			if (!_moving) {
-				_movementBuffer = _movementBuffer.add(delta);
+				_movementBuffer.$add(delta);
 				var dpiMovementThreshold:Number = _movementThreshold * TouchManager.dotsPerCentimeter;
-				if (_movementBuffer.length >= dpiMovementThreshold) {
+				if (_movementBuffer.sqrMagnitude >= dpiMovementThreshold * dpiMovementThreshold) {
 					_moving = true;
 				}
 			}
@@ -118,23 +121,23 @@ package ru.interactivelab.touchscript.gestures {
 					}
 					
 					var totalTime:Number = 0;
-					var totalMovement:Point = new Point();
+					var totalMovement:Vector2 = new Vector2();
 					var i:int = _timeDeltas.length - 1;
 					while (i >= 0 && totalTime < _flickTime) {
 						if (totalTime + _timeDeltas[i] < _flickTime) {
 							totalTime += _timeDeltas[i];
-							totalMovement.x += _positionDeltas[i].x;
-							totalMovement.y += _positionDeltas[i].y;
+							totalMovement.$add(_positionDeltas[i]);
 							i++;
 						} else {
 							break;
 						}
 					}
 					
-					if (_horizontal) totalMovement.y = 0;
-					if (_vertical) totalMovement.x = 0;
+					if (_horizontal) totalMovement.$setY(0);
+					if (_vertical) totalMovement.$setX(0);
 					
-					if (totalMovement.length < _minDistance * TouchManager.dotsPerCentimeter) {
+					var dpiMinDistance:Number = _minDistance * TouchManager.dotsPerCentimeter;
+					if (totalMovement.sqrMagnitude < dpiMinDistance * dpiMinDistance) {
 						setState(GestureState.FAILED);
 					} else {
 						_screenFlickVector = totalMovement;
@@ -152,7 +155,7 @@ package ru.interactivelab.touchscript.gestures {
 		protected override function reset():void {
 			_cluster.removeAllPoints();
 			_moving = false;
-			_movementBuffer = new Point();
+			_movementBuffer.$set(0, 0);
 			_timeDeltas.length = 0;
 			_positionDeltas.length = 0;
 		}

@@ -14,9 +14,9 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 package ru.interactivelab.touchscript.inputSources {
-	import flash.geom.Point;
+	import ru.interactivelab.touchscript.math.Vector2;
 
 	public interface ICoordinatesRemapper {
-		function remap(input:Point):Point;
+		function remap(input:Vector2):Vector2;
 	}
 }

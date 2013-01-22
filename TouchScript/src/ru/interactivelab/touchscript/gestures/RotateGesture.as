@@ -15,12 +15,15 @@
 */
 package ru.interactivelab.touchscript.gestures {
 	import flash.display.InteractiveObject;
-	import flash.geom.Point;
 	
 	import ru.interactivelab.touchscript.TouchManager;
 	import ru.interactivelab.touchscript.TouchPoint;
 	import ru.interactivelab.touchscript.clusters.Cluster2;
 	import ru.interactivelab.touchscript.math.Consts;
+	import ru.interactivelab.touchscript.math.Vector2;
+	import ru.interactivelab.touchscript.touch_internal;
+	
+	use namespace touch_internal;
 	
 	public class RotateGesture extends Transform2DGestureBase {
 		
@@ -72,17 +75,16 @@ package ru.interactivelab.touchscript.gestures {
 			if (!_cluster2.hasClusters) return;
 			
 			var deltaRotation:Number = 0;
-			var oldPos1:Point = _cluster2.getPreviousCenterPosition(Cluster2.CLUSTER1);
-			var oldPos2:Point = _cluster2.getPreviousCenterPosition(Cluster2.CLUSTER2);
-			var newPos1:Point = _cluster2.getCenterPosition(Cluster2.CLUSTER1);
-			var newPos2:Point = _cluster2.getCenterPosition(Cluster2.CLUSTER2);
-			var oldCenterPos:Point = new Point((oldPos1.x + oldPos2.x) * .5, (oldPos1.y + oldPos2.y) * .5);
-			var newCenterPos:Point = new Point((newPos1.x + newPos2.x) * .5, (newPos1.y + newPos2.y) * .5);
-			var oldVector:Point = oldPos2.subtract(oldPos1);
-			var newVector:Point = newPos2.subtract(newPos1);
+			var oldPos1:Vector2 = _cluster2.getPreviousCenterPosition(Cluster2.CLUSTER1);
+			var oldPos2:Vector2 = _cluster2.getPreviousCenterPosition(Cluster2.CLUSTER2);
+			var newPos1:Vector2 = _cluster2.getCenterPosition(Cluster2.CLUSTER1);
+			var newPos2:Vector2 = _cluster2.getCenterPosition(Cluster2.CLUSTER2);
+			var oldCenterPos:Vector2 = oldPos1.add(oldPos2).$multiply(.5);
+			var newCenterPos:Vector2 = newPos1.add(newPos2).$multiply(.5);
+			var oldVector:Vector2 = oldPos2.subtract(oldPos1);
+			var newVector:Vector2 = newPos2.subtract(newPos1);
 			
-			var angle:Number = Math.acos((newVector.x*oldVector.x + newVector.y*oldVector.y) / (newVector.length * oldVector.length)) * Consts.RADIANS_TO_DEGREES;
-			if (newVector.x * oldVector.y - newVector.y * oldVector.x > 0) angle = -angle; // crossproduct
+			var angle:Number = Vector2.angle(oldVector, newVector);
 			
 			if (_isRotating) {
 				deltaRotation = angle;

@@ -14,10 +14,10 @@
 * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 package ru.interactivelab.touchscript.inputSources {
-	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
 	import ru.interactivelab.touchscript.TouchManager;
+	import ru.interactivelab.touchscript.math.Vector2;
 	import ru.valyard.osc.connection.UDPOSCServerConnection;
 	import ru.valyard.osc.tuio.connection.ITUIOConnection;
 	import ru.valyard.osc.tuio.connection.ITUIOCursorListener;
@@ -56,12 +56,12 @@ package ru.interactivelab.touchscript.inputSources {
 		
 		public function addTUIOCursor(cursor:TUIOCursor):void {
 			if (_cursorToInternalId[cursor.sessionID] != undefined) return;
-			_cursorToInternalId[cursor.sessionID] = beginTouch(new Point(cursor.x * _stageWidth, cursor.y * _stageHeight));
+			_cursorToInternalId[cursor.sessionID] = beginTouch(new Vector2(cursor.x * _stageWidth, cursor.y * _stageHeight));
 		}
 		
 		public function updateTUIOCursor(cursor:TUIOCursor):void {
 			if (_cursorToInternalId[cursor.sessionID] == undefined) return;
-			moveTouch(_cursorToInternalId[cursor.sessionID], new Point(cursor.x * _stageWidth, cursor.y * _stageHeight));
+			moveTouch(_cursorToInternalId[cursor.sessionID], new Vector2(cursor.x * _stageWidth, cursor.y * _stageHeight));
 		}
 		
 		public function removeTUIOCursor(cursor:TUIOCursor):void {

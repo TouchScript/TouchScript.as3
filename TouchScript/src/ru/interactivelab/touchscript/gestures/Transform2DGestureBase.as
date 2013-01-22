@@ -15,32 +15,32 @@
 */
 package ru.interactivelab.touchscript.gestures {
 	import flash.display.InteractiveObject;
-	import flash.geom.Point;
 	
 	import ru.interactivelab.touchscript.TouchPoint;
 	import ru.interactivelab.touchscript.clusters.Cluster;
 	import ru.interactivelab.touchscript.clusters.Cluster1;
+	import ru.interactivelab.touchscript.math.Vector2;
 	
 	public class Transform2DGestureBase extends Gesture {
 		
 		protected var _cluster1:Cluster1 = new Cluster1();
-		protected var _localTransformCenter:Point = new Point();
-		protected var _previousLocalTransformCenter:Point = new Point();
-		protected var _globalTransformCenter:Point = new Point();
-		protected var _previousGlobalTransformCenter:Point = new Point();
+		protected var _localTransformCenter:Vector2 = Vector2.ZERO;
+		protected var _previousLocalTransformCenter:Vector2 = Vector2.ZERO;
+		protected var _globalTransformCenter:Vector2 = Vector2.ZERO;
+		protected var _previousGlobalTransformCenter:Vector2 = Vector2.ZERO;
 		
-		public function get localTransformCenter():Point {
+		public function get localTransformCenter():Vector2 {
 			return _localTransformCenter;
 		}
 		
-		public function get previousLocalTransformCenter():Point {
+		public function get previousLocalTransformCenter():Vector2 {
 			return _previousLocalTransformCenter;
 		}
 		
-		public function get globalTransformCenter():Point {
+		public function get globalTransformCenter():Vector2 {
 			return _localTransformCenter;
 		}
-		public function get previousGlobalTransformCenter():Point {
+		public function get previousGlobalTransformCenter():Vector2 {
 			return _previousLocalTransformCenter;
 		}
 		
@@ -82,19 +82,17 @@ package ru.interactivelab.touchscript.gestures {
 			resetGestureProperties();
 		}
 		
-		protected function globalToLocalPosition(global:Point):Point {
+		protected function globalToLocalPosition(global:Vector2):Vector2 {
 			if (displayTarget.parent) {
-				return displayTarget.parent.globalToLocal(global);
+				return Vector2.fromPoint(displayTarget.parent.globalToLocal(global.toPoint()));
 			} else {
-				return global.clone();
+				return global;
 			}
 		}
 		
 		protected function resetGestureProperties():void {
-			_globalTransformCenter.x = 0;
-			_globalTransformCenter.y = 0;
-			_localTransformCenter.x = 0;
-			_localTransformCenter.y = 0;
+			_globalTransformCenter = Vector2.ZERO;
+			_localTransformCenter = Vector2.ZERO;
 		}
 		
 	}
