@@ -68,6 +68,14 @@ package ru.interactivelab.touchscript.gestures
 			resetGestureProperties();
 		}
 		
+		protected function globalToLocalPosition(global:Point):Point {
+			if (displayTarget.parent) {
+				return displayTarget.parent.globalToLocal(global);
+			} else {
+				return global.clone();
+			}
+		}
+		
 		protected function resetGestureProperties():void {
 			_globalTransformCenter = new Point();
 			_localTransformCenter = new Point();

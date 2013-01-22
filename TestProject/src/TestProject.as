@@ -2,6 +2,7 @@ package {
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	
 	import ru.interactivelab.touchscript.TouchManager;
@@ -13,6 +14,7 @@ package {
 	import ru.interactivelab.touchscript.gestures.PanGesture;
 	import ru.interactivelab.touchscript.gestures.PressGesture;
 	import ru.interactivelab.touchscript.gestures.ReleaseGesture;
+	import ru.interactivelab.touchscript.gestures.ScaleGesture;
 	import ru.interactivelab.touchscript.gestures.TapGesture;
 	import ru.interactivelab.touchscript.inputSources.MouseInput;
 	import ru.interactivelab.touchscript.inputSources.TuioInput;
@@ -103,6 +105,9 @@ package {
 			addChild(box1);
 			var panGesture:PanGesture = new PanGesture(box1);
 			panGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_pan);
+			var scaleGesture:ScaleGesture = new ScaleGesture(box1);
+			scaleGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_scale);
+			panGesture.shouldRecognizeSimultaneouslyWith(scaleGesture, true);
 			
 			var box2a:Box = new Box(300, 240, randomColor(), "Drag me");
 			box2a.x = 20
@@ -110,6 +115,9 @@ package {
 			box1.addChild(box2a);
 			panGesture = new PanGesture(box2a);
 			panGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_pan);
+			scaleGesture = new ScaleGesture(box2a);
+			scaleGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_scale);
+			panGesture.shouldRecognizeSimultaneouslyWith(scaleGesture, true);
 			
 			var box2b:Box = new Box(300, 240, randomColor(), "Drag me");
 			box2b.x = 340
@@ -117,6 +125,9 @@ package {
 			box1.addChild(box2b);
 			panGesture = new PanGesture(box2b);
 			panGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_pan);
+			scaleGesture = new ScaleGesture(box2b);
+			scaleGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_scale);
+			panGesture.shouldRecognizeSimultaneouslyWith(scaleGesture, true);
 			
 			addChild(new TouchDebugger());
 		}
@@ -157,6 +168,17 @@ package {
 				var delta:Point = target.localDeltaPosition;
 				target.displayTarget.x += delta.x;
 				target.displayTarget.y += delta.y;
+			}
+		}
+		
+		private function handler_scale(e:GestureEvent):void {
+			var target:ScaleGesture = e.target as ScaleGesture;
+			if (e.state == GestureState.BEGAN || e.state == GestureState.CHANGED) {
+				var matrix:Matrix = target.displayTarget.transform.matrix;
+				matrix.translate(-target.localTransformCenter.x, -target.localTransformCenter.y);
+				matrix.scale(target.localDeltaScale, target.localDeltaScale);
+				matrix.translate(target.localTransformCenter.x, target.localTransformCenter.y);
+				target.displayTarget.transform.matrix = matrix;
 			}
 		}
 		

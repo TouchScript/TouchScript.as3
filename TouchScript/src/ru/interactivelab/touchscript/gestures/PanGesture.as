@@ -39,8 +39,8 @@ package ru.interactivelab.touchscript.gestures {
 			_globalTransformCenter = _cluster1.getCenterPosition();
 			
 			if (_isMoving) {
-				_localTransformCenter = displayTarget.globalToLocal(_globalTransformCenter);
-				_previousLocalTransformCenter = displayTarget.globalToLocal(_previousGlobalTransformCenter);
+				_localTransformCenter = globalToLocalPosition(_globalTransformCenter);
+				_previousLocalTransformCenter = globalToLocalPosition(_previousGlobalTransformCenter);
 				_globalDeltaPosition = _globalTransformCenter.subtract(_previousGlobalTransformCenter);
 				_localDeltaPosition = _localTransformCenter.subtract(_previousLocalTransformCenter);
 			} else {
@@ -50,13 +50,13 @@ package ru.interactivelab.touchscript.gestures {
 				if (_movementBuffer.length > dpiMovementThreshold) {
 					_isMoving = true;
 					_previousGlobalTransformCenter = _globalTransformCenter.subtract(_movementBuffer);
-					_localTransformCenter = displayTarget.globalToLocal(_globalTransformCenter);
-					_previousLocalTransformCenter = displayTarget.globalToLocal(_previousGlobalTransformCenter);
+					_localTransformCenter = globalToLocalPosition(_globalTransformCenter);
+					_previousLocalTransformCenter = globalToLocalPosition(_previousGlobalTransformCenter);
 					_globalDeltaPosition = _globalTransformCenter.subtract(_previousGlobalTransformCenter);
 					_localDeltaPosition = _localTransformCenter.subtract(_previousLocalTransformCenter);
 				} else {
 					_globalTransformCenter = _globalTransformCenter.subtract(_movementBuffer);
-					_localTransformCenter = displayTarget.globalToLocal(_globalTransformCenter);
+					_localTransformCenter = globalToLocalPosition(_globalTransformCenter);
 					_previousGlobalTransformCenter = _globalTransformCenter;
 					_previousLocalTransformCenter = _localTransformCenter;
 				}
