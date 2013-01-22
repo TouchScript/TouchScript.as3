@@ -4,6 +4,9 @@ package ru.interactivelab.touchscript.utils
 	import flash.events.Event;
 	import flash.utils.getTimer;
 	
+	import ru.interactivelab.touchscript.events.utils.TimeEvent;
+	
+	[Event(name="tick", type="ru.interactivelab.touchscript.events.utils.TimeEvent")]
 	public class TimeImpl extends Shape {
 		
 		private var _previousTime:Number;
@@ -28,7 +31,11 @@ package ru.interactivelab.touchscript.utils
 		private function handler_enterFrame(event:Event):void {
 			_time = getTimer() * 0.001;
 			_deltaTime = _time - _previousTime;
-			_previousTime = time;
+			_previousTime = _time;
+			
+			if (hasEventListener(TimeEvent.TICK)) {
+				dispatchEvent(new TimeEvent(TimeEvent.TICK, false, false, _time, _deltaTime));
+			}
 		}
 	}
 }
