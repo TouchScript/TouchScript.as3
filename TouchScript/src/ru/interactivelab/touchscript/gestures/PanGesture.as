@@ -81,6 +81,7 @@ package ru.interactivelab.touchscript.gestures {
 		}
 		
 		protected override function resetGestureProperties():void {
+			super.resetGestureProperties();
 			_globalDeltaPosition.x = 0;
 			_globalDeltaPosition.y = 0;
 			_localDeltaPosition.x = 0;
@@ -88,6 +89,7 @@ package ru.interactivelab.touchscript.gestures {
 		}
 		
 		private function resetMovement():void {
+			_isMoving = false;
 			_movementBuffer.x = 0;
 			_movementBuffer.y = 0;
 		}
