@@ -20,6 +20,9 @@ package ru.interactivelab.touchscript.debugging {
 	import ru.interactivelab.touchscript.TouchManager;
 	import ru.interactivelab.touchscript.TouchPoint;
 	import ru.interactivelab.touchscript.events.TouchManagerEvent;
+	import ru.interactivelab.touchscript.touch_internal;
+	
+	use namespace touch_internal;
 	
 	public class TouchDebugger extends Sprite {
 		
@@ -83,28 +86,28 @@ package ru.interactivelab.touchscript.debugging {
 		private function handler_added(event:TouchManagerEvent):void {
 			for each (var touch:TouchPoint in event.touchPoints) {
 				var dummy:TouchDummy = new TouchDummy();
-				this._touchPoints[touch.id] = dummy;
+				this._touchPoints[touch.$id] = dummy;
 				this._touchPointsContainer.addChild(dummy);
 				
 				dummy.mouseEnabled = false;
-				dummy.x = touch.position.x;
-				dummy.y = touch.position.y;
+				dummy.x = touch.$position.$x;
+				dummy.y = touch.$position.$y;
 			}
 		}
 		
 		private function handler_updated(event:TouchManagerEvent):void {
 			for each (var touch:TouchPoint in event.touchPoints) {
-				var dummy:TouchDummy = this._touchPoints[touch.id];
+				var dummy:TouchDummy = this._touchPoints[touch.$id];
 				if (!dummy) return;
-				dummy.x = touch.position.x;
-				dummy.y = touch.position.y;
+				dummy.x = touch.$position.$x;
+				dummy.y = touch.$position.$y;
 			}
 		}
 		
 		private function handler_removed(event:TouchManagerEvent):void {
 			for each (var touch:TouchPoint in event.touchPoints) {
-				var dummy:TouchDummy = this._touchPoints[touch.id];
-				delete this._touchPoints[touch.id];
+				var dummy:TouchDummy = this._touchPoints[touch.$id];
+				delete this._touchPoints[touch.$id];
 				if (!dummy) return;
 				this._touchPointsContainer.removeChild(dummy);
 			}

@@ -46,7 +46,7 @@ package ru.interactivelab.touchscript.clusters {
 			for each (var p1:TouchPoint in _points) {
 				for each (var p2:TouchPoint in _points) {
 					if (p1 == p2) continue;
-					if (Vector2.sqrDistance(p1.position, p2.position) >= _minPointsDistanceSquared) return true;
+					if (Vector2.sqrDistance(p1.$position, p2.$position) >= _minPointsDistanceSquared) return true;
 				}
 			}
 			return false;
@@ -118,13 +118,13 @@ package ru.interactivelab.touchscript.clusters {
 				var maxDist2:Number = Number.NEGATIVE_INFINITY;
 				for (var i:int = 0; i < total; i++) {
 					var obj:TouchPoint = _points[i];
-					var dist:Number = Vector2.sqrDistance(center1, obj.position);
+					var dist:Number = Vector2.sqrDistance(center1, obj.$position);
 					if (dist > maxDist2) {
 						maxDist2 = dist;
 						obj2 = obj;
 					}
 					
-					dist = Vector2.sqrDistance(center2, obj.position);
+					dist = Vector2.sqrDistance(center2, obj.$position);
 					if (dist > maxDist1) {
 						maxDist1 = dist;
 						obj1 = obj;
@@ -134,10 +134,10 @@ package ru.interactivelab.touchscript.clusters {
 				// If it is the same point it means that this point is too far away from both clusters and has to be in a separate cluster
 				if (obj1 == obj2) {
 					center1 = center1.add(center2).$multiply(.5);
-					center2 = obj2.position;
+					center2 = obj2.$position;
 				} else {
-					center1 = obj1.position;
-					center2 = obj2.position;
+					center1 = obj1.$position;
+					center2 = obj2.$position;
 				}
 				
 				_cluster1.length = 0;
@@ -145,7 +145,7 @@ package ru.interactivelab.touchscript.clusters {
 				
 				for (i = 0; i < total; i++) {
 					obj = _points[i];
-					if (Vector2.sqrDistance(center1, obj.position) < Vector2.sqrDistance(center2, obj.position)) {
+					if (Vector2.sqrDistance(center1, obj.$position) < Vector2.sqrDistance(center2, obj.$position)) {
 						_cluster1.push(obj);
 					} else {
 						_cluster2.push(obj);

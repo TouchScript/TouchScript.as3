@@ -84,7 +84,7 @@ package ru.interactivelab.touchscript.clusters {
 			
 			var position:Vector2 = new Vector2();
 			for each (var point:TouchPoint in touches) {
-				position.$add(point.position);
+				position.$add(point.$position);
 			}
 			return position.$divide(length);
 		}
@@ -96,7 +96,7 @@ package ru.interactivelab.touchscript.clusters {
 			
 			var position:Vector2 = new Vector2();
 			for each (var point:TouchPoint in touches) {
-				position.$add(point.previousPosition);
+				position.$add(point.$previousPosition);
 			}
 			return position.$divide(length);
 		}
@@ -104,7 +104,7 @@ package ru.interactivelab.touchscript.clusters {
 		protected function getHash(touches:Array):String {
 			var result:String = "";
 			for each (var point:TouchPoint in touches) {
-				result += "#" + point.id;
+				result += "#" + point.$id;
 			}
 			return result;
 		}

@@ -23,6 +23,8 @@ package ru.interactivelab.touchscript.gestures {
 	import ru.interactivelab.touchscript.touch_internal;
 	import ru.valyard.behaviors.core.InteractiveBehavior;
 	
+	use namespace touch_internal;
+	
 	public class Gesture extends InteractiveBehavior {
 		
 		private var _state:String = GestureState.POSSIBLE;
@@ -81,7 +83,7 @@ package ru.interactivelab.touchscript.gestures {
 		
 		public function Gesture(target:InteractiveObject, ...params) {
 			super(target, params);
-			touch_internal::$reset();
+			$reset();
 		}
 		
 		public function hasTouchPoint(point:TouchPoint):Boolean {
@@ -139,7 +141,7 @@ package ru.interactivelab.touchscript.gestures {
 		
 		protected function setState(value:String):Boolean {
 			if (value == _state && _state != GestureState.CHANGED) return false;
-			var newState:String = TouchManager.touch_internal::gestureChangeState(this, value);
+			var newState:String = TouchManager.$gestureChangeState(this, value);
 			$state = newState;
 			
 			return value == newState;
@@ -148,7 +150,7 @@ package ru.interactivelab.touchscript.gestures {
 		protected function ignoreTouch(point:TouchPoint):void {
 			var index:int = _activeTouches.indexOf(point);
 			if (index > -1) _activeTouches.splice(index, 1);
-			TouchManager.touch_internal::ignoreTouch(point);
+			TouchManager.$ignoreTouch(point);
 		}
 		
 		//--------------------------------------------------------------------------
