@@ -9,6 +9,9 @@ package test {
 		public static const ALIGN_CENTER:String = "center";
 		public static const ALIGN_TOP:String = "top";
 		
+		[Embed(systemFont="Arial", fontName="Arial", mimeType="application/x-font", embedAsCFF=false)]
+		private static var font:Class;
+		
 		private var _width:int;
 		private var _height:int;
 		private var _defaultColor:uint;
@@ -26,6 +29,7 @@ package test {
 			_align = textAlign;
 			
 			_tf = new TextField();
+			_tf.embedFonts = true;
 			_tf.selectable = false;
 			_tf.mouseEnabled = false;
 			var fmt:TextFormat = _tf.getTextFormat();

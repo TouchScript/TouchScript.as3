@@ -77,8 +77,10 @@ package ru.interactivelab.touchscript.gestures
 		}
 		
 		protected function resetGestureProperties():void {
-			_globalTransformCenter = new Point();
-			_localTransformCenter = new Point();
+			_globalTransformCenter.x = 0;
+			_globalTransformCenter.y = 0;
+			_localTransformCenter.x = 0;
+			_localTransformCenter.y = 0;
 		}
 		
 	}

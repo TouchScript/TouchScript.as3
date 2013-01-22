@@ -14,10 +14,12 @@ package {
 	import ru.interactivelab.touchscript.gestures.PanGesture;
 	import ru.interactivelab.touchscript.gestures.PressGesture;
 	import ru.interactivelab.touchscript.gestures.ReleaseGesture;
+	import ru.interactivelab.touchscript.gestures.RotateGesture;
 	import ru.interactivelab.touchscript.gestures.ScaleGesture;
 	import ru.interactivelab.touchscript.gestures.TapGesture;
 	import ru.interactivelab.touchscript.inputSources.MouseInput;
 	import ru.interactivelab.touchscript.inputSources.TuioInput;
+	import ru.interactivelab.touchscript.math.Consts;
 	
 	import test.Box;
 	
@@ -100,6 +102,7 @@ package {
 			
 			// movable/scalable stuff
 			var box1:Box = new Box(800, 400, randomColor(), "Scalable container", "top");
+			box1.name = "box1";
 			box1.x = MAIN_WINDOW_PADDING + 10;
 			box1.y = 200;
 			addChild(box1);
@@ -107,9 +110,14 @@ package {
 			panGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_pan);
 			var scaleGesture:ScaleGesture = new ScaleGesture(box1);
 			scaleGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_scale);
+			var rotateGesture:RotateGesture = new RotateGesture(box1);
+			rotateGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_rotate);
 			panGesture.shouldRecognizeSimultaneouslyWith(scaleGesture, true);
+			panGesture.shouldRecognizeSimultaneouslyWith(rotateGesture, true);
+			scaleGesture.shouldRecognizeSimultaneouslyWith(rotateGesture, true);
 			
 			var box2a:Box = new Box(300, 240, randomColor(), "Drag me");
+			box2a.name = "box2a";
 			box2a.x = 20
 			box2a.y = 50;
 			box1.addChild(box2a);
@@ -117,9 +125,14 @@ package {
 			panGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_pan);
 			scaleGesture = new ScaleGesture(box2a);
 			scaleGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_scale);
+			rotateGesture = new RotateGesture(box2a);
+			rotateGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_rotate);
 			panGesture.shouldRecognizeSimultaneouslyWith(scaleGesture, true);
+			panGesture.shouldRecognizeSimultaneouslyWith(rotateGesture, true);
+			scaleGesture.shouldRecognizeSimultaneouslyWith(rotateGesture, true);
 			
 			var box2b:Box = new Box(300, 240, randomColor(), "Drag me");
+			box2b.name = "box2b";
 			box2b.x = 340
 			box2b.y = 50;
 			box1.addChild(box2b);
@@ -127,7 +140,11 @@ package {
 			panGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_pan);
 			scaleGesture = new ScaleGesture(box2b);
 			scaleGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_scale);
+			rotateGesture = new RotateGesture(box2b);
+			rotateGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_rotate);
 			panGesture.shouldRecognizeSimultaneouslyWith(scaleGesture, true);
+			panGesture.shouldRecognizeSimultaneouslyWith(rotateGesture, true);
+			scaleGesture.shouldRecognizeSimultaneouslyWith(rotateGesture, true);
 			
 			addChild(new TouchDebugger());
 		}
@@ -177,6 +194,17 @@ package {
 				var matrix:Matrix = target.displayTarget.transform.matrix;
 				matrix.translate(-target.localTransformCenter.x, -target.localTransformCenter.y);
 				matrix.scale(target.localDeltaScale, target.localDeltaScale);
+				matrix.translate(target.localTransformCenter.x, target.localTransformCenter.y);
+				target.displayTarget.transform.matrix = matrix;
+			}
+		}
+		
+		private function handler_rotate(e:GestureEvent):void {
+			var target:RotateGesture = e.target as RotateGesture;
+			if (e.state == GestureState.BEGAN || e.state == GestureState.CHANGED) {
+				var matrix:Matrix = target.displayTarget.transform.matrix;
+				matrix.translate(-target.localTransformCenter.x, -target.localTransformCenter.y);
+				matrix.rotate(target.localDeltaRotation * Consts.DEGREES_TO_RADIANS);
 				matrix.translate(target.localTransformCenter.x, target.localTransformCenter.y);
 				target.displayTarget.transform.matrix = matrix;
 			}
