@@ -276,11 +276,11 @@ package ru.interactivelab.touchscript {
 								if (gesture.shouldReceiveTouch(touch)) touchesToReceive.push(touch);
 							}
 							if (touchesToReceive.length > 0) {
-								if (!gestureTouches[gesture]) {
+								if (gestureTouches[gesture]) {
+									gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
+								} else {
 									activeGestures.push(gesture);
 									gestureTouches[gesture] = touchesToReceive;
-								} else {
-									gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
 								}
 							}
 						}
@@ -335,11 +335,11 @@ package ru.interactivelab.touchscript {
 							if (gesture.hasTouchPoint(touch)) touchesToReceive.push(touch);
 						}
 						if (touchesToReceive.length > 0) {
-							if (!gestureTouches[gesture]) {
+							if (gestureTouches[gesture]) {
+								gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
+							} else {
 								activeGestures.push(gesture);
 								gestureTouches[gesture] = touchesToReceive;
-							} else {
-								gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
 							}
 						}
 					}
@@ -387,11 +387,11 @@ package ru.interactivelab.touchscript {
 							if (gesture.hasTouchPoint(touch)) touchesToReceive.push(touch);
 						}
 						if (touchesToReceive.length > 0) {
-							if (!gestureTouches[gesture]) {
+							if (gestureTouches[gesture]) {
+								gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
+							} else {
 								activeGestures.push(gesture);
 								gestureTouches[gesture] = touchesToReceive;
-							} else {
-								gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
 							}
 						}
 					}
@@ -439,11 +439,11 @@ package ru.interactivelab.touchscript {
 							if (gesture.hasTouchPoint(touch)) touchesToReceive.push(touch);
 						}
 						if (touchesToReceive.length > 0) {
-							if (!gestureTouches[gesture]) {
+							if (gestureTouches[gesture]) {
+								gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
+							} else {
 								activeGestures.push(gesture);
 								gestureTouches[gesture] = touchesToReceive;
-							} else {
-								gestureTouches[gesture] = (gestureTouches[gesture] as Array).concat(touchesToReceive);
 							}
 						}
 					}
