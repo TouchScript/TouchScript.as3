@@ -21,7 +21,10 @@ package ru.interactivelab.touchscript.gestures {
 	import ru.interactivelab.touchscript.TouchPoint;
 	import ru.interactivelab.touchscript.clusters.Cluster;
 	import ru.interactivelab.touchscript.clusters.Cluster1;
+	import ru.interactivelab.touchscript.touch_internal;
 	import ru.interactivelab.touchscript.utils.Time;
+	
+	use namespace touch_internal;
 	
 	public class TapGesture extends Gesture {
 		
@@ -71,7 +74,7 @@ package ru.interactivelab.touchscript.gestures {
 						setState(GestureState.FAILED);
 						return;
 					}
-					var newTarget:InteractiveObject = TouchManager.getHitTarget(touch);
+					var newTarget:InteractiveObject = TouchManager.getHitTarget(touch.$position.$x, touch.$position.$y);
 					if (newTarget == null || !(this.target == newTarget || 
 					   (super.displayTarget is DisplayObjectContainer && (super.displayTarget as DisplayObjectContainer).contains(newTarget))))
 					{

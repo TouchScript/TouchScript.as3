@@ -21,6 +21,7 @@ package ru.interactivelab.touchscript {
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
 	import ru.interactivelab.touchscript.events.TouchManagerEvent;
@@ -51,6 +52,8 @@ package ru.interactivelab.touchscript {
 		private var _touchesMoved:Dictionary = new Dictionary();
 		private var _gesturesToReset:Array = [];
 		private var _nextTouchPointId:int = 0;
+		
+		private var _tmpPoint:Point = new Point();
 		
 		//--------------------------------------------------------------------------
 		//
@@ -111,9 +114,11 @@ package ru.interactivelab.touchscript {
 			_stage = stage;
 		}
 		
-		public function getHitTarget(touch:TouchPoint):InteractiveObject {
+		public function getHitTarget(x:Number, y:Number):InteractiveObject {
 			if (!_initialized) initError();
-			var target:InteractiveObject = DisplayObjectUtils.getTopTarget(_stage, touch.$position.toPoint());
+			_tmpPoint.x = x;
+			_tmpPoint.y = y;
+			var target:InteractiveObject = DisplayObjectUtils.getTopTarget(_stage, _tmpPoint);
 			// TODO: HitTests
 			return target;
 		}
@@ -238,7 +243,7 @@ package ru.interactivelab.touchscript {
 				for each (var touch:TouchPoint in _touchesBegan) {
 					_touches.push(touch);
 					_idToTouch[touch.$id] = touch;
-					touch.$target = getHitTarget(touch);
+					touch.$target = getHitTarget(touch.$position.$x, touch.$position.$y);
 					
 					if (touch.$target != null) {
 						var list:Array = targetTouches[touch.$target];
