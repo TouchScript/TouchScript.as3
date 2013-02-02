@@ -11,7 +11,7 @@ package {
 	import ru.interactivelab.touchscript.inputSources.TuioInput;
 	
 	
-	[SWF(frameRate="60", width="1024", height="768")]
+	[SWF(frameRate="60", width="1280", height="800")]
 	public class TestProject extends Sprite {
 		
 		private var _mouseInput:MouseInput;
