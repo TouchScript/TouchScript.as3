@@ -59,8 +59,11 @@ package components {
 		}
 		
 		protected function redraw():void {
+//			Scaleform bug. Have to clear canvas before redrawing.
+			graphics.clear();
 			graphics.beginFill(_color);
-			graphics.drawRoundRect(0, 0, _width, _height, 20, 20);
+			graphics.drawRoundRect(0, 0, _width, _height, 40, 40);
+			
 			_tf.width = _width;
 			_tf.x = 0;
 			switch (_align) {
