@@ -31,7 +31,7 @@ package components {
 			_tf = new TextField();
 			_tf.embedFonts = true;
 			_tf.selectable = false;
-			_tf.mouseEnabled = false;
+//			_tf.mouseEnabled = false;  -- Breaks everything when run via Scaleform
 			var fmt:TextFormat = _tf.getTextFormat();
 			fmt.font = "Arial";
 			fmt.align = TextFormatAlign.CENTER;

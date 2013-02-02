@@ -31,6 +31,7 @@ package interfaces
 			// main window
 			var wnd:Box = new Box(stage.stageWidth-Defaults.MAIN_WINDOW_PADDING*2, stage.stageHeight-Defaults.MAIN_WINDOW_PADDING*2, 0xEEEEEE);
 			wnd.x = wnd.y = Defaults.MAIN_WINDOW_PADDING;
+			wnd.name = "window";
 			addChild(wnd);
 			
 			var pressGesture:PressGesture = new PressGesture(wnd);
@@ -40,6 +41,7 @@ package interfaces
 			
 			// tap hierarchy
 			var tap1:Box = new Box(500, 130, Defaults.randomColor(), "Tap hierarchy example", "top");
+			tap1.name = "tap1";
 			tap1.x = Defaults.MAIN_WINDOW_PADDING + 10;
 			tap1.y = Defaults.MAIN_WINDOW_PADDING + 10;
 			addChild(tap1);
@@ -47,6 +49,7 @@ package interfaces
 			tapGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_tap_tapped);
 			
 			var tap2a:Box = new Box(220, 80, Defaults.randomColor());
+			tap2a.name = "tap2a";
 			tap2a.x = 10;
 			tap2a.y = 40;
 			tap1.addChild(tap2a);
@@ -54,6 +57,7 @@ package interfaces
 			tapGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_tap_tapped);
 			
 			var tap2b:Box = new Box(220, 80, Defaults.randomColor());
+			tap2b.name = "tap2b";
 			tap2b.x = 500 - 220 - 10;
 			tap2b.y = 40;
 			tap1.addChild(tap2b);
@@ -61,6 +65,7 @@ package interfaces
 			tapGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_tap_tapped);
 			
 			var tap3a:Box = new Box(120, 60, Defaults.randomColor(), "Tap me!");
+			tap3a.name = "tap3a";
 			tap3a.x = 10;
 			tap3a.y = 10;
 			tap2a.addChild(tap3a);
@@ -68,6 +73,7 @@ package interfaces
 			tapGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_tap_tapped);
 			
 			var tap3b:Box = new Box(120, 60, Defaults.randomColor(), "Tap me!");
+			tap3b.name = "tap3b";
 			tap3b.x = 10;
 			tap3b.y = 10;
 			tap2b.addChild(tap3b);
@@ -76,6 +82,7 @@ package interfaces
 			
 			// longpress hierarchy
 			var lp1:Box = new Box(440, 130, Defaults.randomColor(), "Longpress hierarchy example", "top");
+			lp1.name = "lp1";
 			lp1.x = stage.stageWidth - lp1.width - Defaults.MAIN_WINDOW_PADDING - 10;
 			lp1.y = Defaults.MAIN_WINDOW_PADDING + 10;
 			addChild(lp1);
@@ -83,6 +90,7 @@ package interfaces
 			longpressGesture.addEventListener(GestureEvent.STATE_CHANGED, handler_longPressRecognized);
 			
 			var lp2:Box = new Box(220, 80, Defaults.randomColor(), "Press and hold me!");
+			lp2.name = "lp2";
 			lp2.x = 10;
 			lp2.y = 40;
 			lp1.addChild(lp2);
