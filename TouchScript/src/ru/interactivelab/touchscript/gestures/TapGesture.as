@@ -58,6 +58,7 @@ package ru.interactivelab.touchscript.gestures {
 			for each (var touch:TouchPoint in touches) {
 				if (_cluster.addPoint(touch) == Cluster.RESULT_FIRST_POINT_ADDED) {
 					_startTime = Time.time;
+					setState(GestureState.BEGAN);
 				}
 			}
 		}
@@ -65,6 +66,7 @@ package ru.interactivelab.touchscript.gestures {
 		protected override function touchesMoved(touches:Array):void {
 			_cluster.invalidate();
 			_totalMovement += _cluster.getCenterPosition().subtract(_cluster.getPreviousCenterPosition()).magnitude;
+			setState(GestureState.CHANGED);
 		}
 		
 		protected override function touchesEnded(touches:Array):void {
