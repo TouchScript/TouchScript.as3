@@ -25,14 +25,8 @@ package {
 			_scaleformInput = new ScaleformInput(stage);
 			_mouseInput = new MouseInput(stage);
 			
-//			var s:Sprite = new Sprite();
-//			addChild(s);
-//			s.graphics.beginFill(0xFF0000);
-//			s.graphics.drawRect(100, 100, stage.stageWidth-200, stage.stageHeight-200);
-			
 			var example:Sprite = new Example1();
 			addChild(example);
-			
 			
 			addChild(new TouchDebugger());			
 			

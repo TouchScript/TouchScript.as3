@@ -20,12 +20,9 @@ package ru.interactivelab.touchscript.inputSources {
 			super();
 			
 			_stage = stage;
-			
-//			if (ExternalInterface.available) ExternalInterface.call("RegisterTouchInput", this);
 		}
 		
 		public function Scaleform_beginTouch(id:int, x:Number, y:Number):int {
-//			trace("FLASH", "beginTouch", id, x, y);
 			if (_cursorToInternalId[id] != undefined) return ERROR;
 			
 			x *= _stage.stageWidth;
@@ -39,21 +36,18 @@ package ru.interactivelab.touchscript.inputSources {
 		}
 		
 		public function Scaleform_endTouch(id:int):void {
-//			trace("FLASH", "endTouch", id);
 			if (_cursorToInternalId[id] == undefined) return;
 			endTouch(_cursorToInternalId[id]);
 			delete _cursorToInternalId[id];
 		}
 		
 		public function Scaleform_moveTouch(id:int, x:Number, y:Number):void {
-//			trace("FLASH", "moveTouch", id, x, y);
 			if (_cursorToInternalId[id] == undefined) return;
 			moveTouch(_cursorToInternalId[id], new Vector2(x * _stage.stageWidth, y * _stage.stageHeight));
 
 		}
 		
 		public function Scaleform_cancelTouch(id:int):void {
-//			trace("FLASH", "cancelTouch", id);
 			if (_cursorToInternalId[id] == undefined) return;
 			cancelTouch(_cursorToInternalId[id]);
 			delete _cursorToInternalId[id];
